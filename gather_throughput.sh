@@ -10,6 +10,8 @@
 # Collect stats once per $sleep_time, in sec. Tunable.
 # 5 min by default, 86400 seconds = 1 day
 
+. /etc/profile.d/CP.sh
+
 sleep_time=60
 
 # Configure your interfaces here (will be updated to do this automatically in the future)
@@ -27,7 +29,7 @@ trap cleanup 2 3 5 6 9 11
 cleanup ()
 {
 	echo > /dev/tty
-	echo "Submit $LOG_FILE to support site" > /dev/tty
+	echo "Submit $LOG_FILE to Craig for analysis" > /dev/tty
 	exit 0
 }
 
