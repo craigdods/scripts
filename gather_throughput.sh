@@ -46,7 +46,7 @@ do
 		echo "============== Hostname ==============="
 		hostname
 		echo "============== Network Statistics ==============="
-		echo "IFNAME	rx_bytes 	tx_bytes"
+		echo "IFNAME	   rx_bytes 	   tx_bytes"
 		echo -n $int1 && ethtool -S $int1 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int2 && ethtool -S $int2 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int3 && ethtool -S $int3 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
