@@ -10,15 +10,15 @@
 # Collect stats once per $sleep_time, in sec. Tunable.
 # 5 min by default, 86400 seconds = 1 day
 
-sleep_time=300
+sleep_time=60
 
 # Configure your interfaces here (will be updated to do this automatically in the future)
-int1=Internal
-int2=External
-int3=DMZ
-int4=Lan1
-int5=Lan2
-int6=Lan3
+int1=eth0
+int2=eth4
+int3=eth5
+int4=eth6
+int5=eth7
+int6=eth8
 
 cur_time=`date +'%m%d%H%M%S'`
 LOG_FILE="CP-$cur_time.log"
@@ -49,6 +49,11 @@ do
 		uptime
 		echo "============== Network Statistics ==============="
 		echo -n $int1 && ethtool -S $int1 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		echo -n $int2 && ethtool -S $int2 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		echo -n $int3 && ethtool -S $int3 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		echo -n $int4 && ethtool -S $int4 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		echo -n $int5 && ethtool -S $int5 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		echo -n $int6 && ethtool -S $int6 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 
 
 	echo "}}}"
