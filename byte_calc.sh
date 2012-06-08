@@ -33,7 +33,7 @@ int2_rx_thrpt=$(echo "($int2_byte_rx * 0.00000762939453)  / $iterations / ($time
 int2_tx_thrpt=`echo "($int2_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
 int3_byte_rx=`cat $logfile | grep $int3 | awk '{print $2}' | awk '{sum+=$1} END {printf "%f", sum}'`
-int3_byte_tx=`cat $logfile | grep $int3 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f", sum}}'`
+int3_byte_tx=`cat $logfile | grep $int3 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f", sum}'`
 int3_rx_thrpt=`echo "($int3_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 int3_tx_thrpt=`echo "($int3_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
