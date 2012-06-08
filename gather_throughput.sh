@@ -21,7 +21,7 @@ int5=eth7
 int6=eth8
 
 cur_time=`date +'%m%d%H%M%S'`
-LOG_FILE="CP-$cur_time.log"
+LOG_FILE="CP-TP$cur_time.log"
 
 trap cleanup 2 3 5 6 9 11
 cleanup ()
