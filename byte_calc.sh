@@ -22,34 +22,34 @@ iterations=`grep -c $int1 $logfile`
 
 echo "There were" $iterations "recordings $time minutes apart"
 
-int1_byte_rx=`cat $logfile | grep $int1 | awk '{print $2}' | awk '{sum+=$1} END {print sum}'`
-int1_byte_tx=`cat $logfile | grep $int1 | awk '{print $10}' | awk '{sum+=$1} END {print sum}'`
+int1_byte_rx=`cat $logfile | grep $int1 | awk '{print $2}' | awk '{sum+=$1} END {printf "%f" sum}'`
+int1_byte_tx=`cat $logfile | grep $int1 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f" sum}'`
 int1_rx_thrpt=`echo "($int1_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 int1_tx_thrpt=`echo "($int1_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
-int2_byte_rx=`cat $logfile | grep $int2 | awk '{print $2}' | awk '{sum+=$1} END {print sum}'`
-int2_byte_tx=`cat $logfile | grep $int2 | awk '{print $10}' | awk '{sum+=$1} END {print sum}'`
-int2_rx_thrpt=`echo "($int2_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
+int2_byte_rx=`cat $logfile | grep $int2 | awk '{print $2}' | awk '{sum+=$1} END {printf "%f" sum}'`
+int2_byte_tx=`cat $logfile | grep $int2 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f" sum}'`
+int2_rx_thrpt=$(echo "($int2_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l)
 int2_tx_thrpt=`echo "($int2_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
-int3_byte_rx=`cat $logfile | grep $int3 | awk '{print $2}' | awk '{sum+=$1} END {print sum}'`
-int3_byte_tx=`cat $logfile | grep $int3 | awk '{print $10}' | awk '{sum+=$1} END {print sum}'`
+int3_byte_rx=`cat $logfile | grep $int3 | awk '{print $2}' | awk '{sum+=$1} END {printf "%f" sum}'`
+int3_byte_tx=`cat $logfile | grep $int3 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f" sum}}'`
 int3_rx_thrpt=`echo "($int3_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 int3_tx_thrpt=`echo "($int3_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
-int4_byte_rx=`cat $logfile | grep $int4 | awk '{print $2}' | awk '{sum+=$1} END {print sum}'`
-int4_byte_tx=`cat $logfile | grep $int4 | awk '{print $10}' | awk '{sum+=$1} END {print sum}'`
+int4_byte_rx=`cat $logfile | grep $int4 | awk '{print $2}' | awk '{sum+=$1} END {printf "%f" sum}'`
+int4_byte_tx=`cat $logfile | grep $int4 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f" sum}'`
 int4_rx_thrpt=`echo "($int4_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 int4_tx_thrpt=`echo "($int4_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
-int5_byte_rx=`cat $logfile | grep $int5 | awk '{print $2}' | awk '{sum+=$1} END {print sum}'`
-int5_byte_tx=`cat $logfile | grep $int5 | awk '{print $10}' | awk '{sum+=$1} END {print sum}'`
+int5_byte_rx=`cat $logfile | grep $int5 | awk '{print $2}' | awk '{sum+=$1} END {printf "%f" sum}'`
+int5_byte_tx=`cat $logfile | grep $int5 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f" sum}'`
 int5_rx_thrpt=`echo "($int5_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 int5_tx_thrpt=`echo "($int5_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
 
-int6_byte_rx=`cat $logfile | grep $int6 | awk '{print $2}' | awk '{sum+=$1} END {print sum}'`
-int6_byte_tx=`cat $logfile | grep $int6 | awk '{print $10}' | awk '{sum+=$1} END {print sum}'`
+int6_byte_rx=`cat $logfile | grep $int6 | awk '{print $2}' | awk '{sum+=$1} END {printf "%f" sum}'`
+int6_byte_tx=`cat $logfile | grep $int6 | awk '{print $10}' | awk '{sum+=$1} END {printf "%f" sum}'`
 int6_rx_thrpt=`echo "($int6_byte_rx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 int6_tx_thrpt=`echo "($int6_byte_tx * 0.00000762939453)  / $iterations / ($time * 60)" | bc -l`
 
