@@ -21,7 +21,7 @@ int5=eth7
 int6=eth8
 
 cur_time=`date +'%m%d%H%M%S'`
-LOG_FILE="CP-TP$cur_time.log"
+LOG_FILE="CP-TP-$cur_time.log"
 
 trap cleanup 2 3 5 6 9 11
 cleanup ()
@@ -46,6 +46,7 @@ do
 		echo "============== Hostname ==============="
 		hostname
 		echo "============== Network Statistics ==============="
+		echo "IFNAME	rx_bytes 	tx_bytes"
 		echo -n $int1 && ethtool -S $int1 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int2 && ethtool -S $int2 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int3 && ethtool -S $int3 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
