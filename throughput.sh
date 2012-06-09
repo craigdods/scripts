@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Configure your interfaces here (will be updated to do this automatically in the future)
 int1=eth0
@@ -56,23 +56,40 @@ int5_tx_bytes=`cat $logfile | grep $int5 | awk '{print $3}' | awk '{sum+=$1} END
 int6_tx_bytes=`cat $logfile | grep $int6 | awk '{print $3}' | awk '{sum+=$1} END {printf "%f", sum}'`
 
 # Sums minus the original values and converted to Mbps
-int1_rx_thrpt=`echo "(($int1_rx_bytes - $int1_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int2_rx_thrpt=`echo "(($int2_rx_bytes - $int2_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int3_rx_thrpt=`echo "(($int3_rx_bytes - $int3_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int4_rx_thrpt=`echo "(($int4_rx_bytes - $int4_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int5_rx_thrpt=`echo "(($int5_rx_bytes - $int5_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int6_rx_thrpt=`echo "(($int6_rx_bytes - $int6_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
+int1_rx_thrpt=`echo "(($int1_rx_bytes - $int1_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int2_rx_thrpt=`echo "(($int2_rx_bytes - $int2_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int3_rx_thrpt=`echo "(($int3_rx_bytes - $int3_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int4_rx_thrpt=`echo "(($int4_rx_bytes - $int4_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int5_rx_thrpt=`echo "(($int5_rx_bytes - $int5_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int6_rx_thrpt=`echo "(($int6_rx_bytes - $int6_orig_rx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
 
-int1_tx_thrpt=`echo "(($int1_tx_bytes - $int1_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int2_tx_thrpt=`echo "(($int2_tx_bytes - $int2_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int3_tx_thrpt=`echo "(($int3_tx_bytes - $int3_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int4_tx_thrpt=`echo "(($int4_tx_bytes - $int4_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int5_tx_thrpt=`echo "(($int5_tx_bytes - $int5_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
-int6_tx_thrpt=`echo "(($int6_tx_bytes - $int6_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc`
+int1_tx_thrpt=`echo "(($int1_tx_bytes - $int1_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int2_tx_thrpt=`echo "(($int2_tx_bytes - $int2_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int3_tx_thrpt=`echo "(($int3_tx_bytes - $int3_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int4_tx_thrpt=`echo "(($int4_tx_bytes - $int4_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int5_tx_thrpt=`echo "(($int5_tx_bytes - $int5_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
+int6_tx_thrpt=`echo "(($int6_tx_bytes - $int6_orig_tx_bytes) * 0.00000762939453)  / $iterations / $time" | bc -l`
 
+int1_bytes_total=`echo $int1_rx_thrpt + $int1_tx_thrpt | bc`
+echo "Total average megabits per second (send and receive) for $int1 :" $int1_bytes_total
 
+int2_bytes_total=`echo $int2_rx_thrpt + $int2_tx_thrpt | bc`
+echo "Total average megabits per second (send and receive) for $int2 :" $int2_bytes_total
 
+int3_bytes_total=`echo $int3_rx_thrpt + $int3_tx_thrpt | bc`
+echo "Total average megabits per second (send and receive) for $int3 :" $int3_bytes_total
 
+int4_bytes_total=`echo $int4_rx_thrpt + $int4_tx_thrpt | bc`
+echo "Total average megabits per second (send and receive) for $int4 :" $int4_bytes_total
 
-echo $int1_rx_bytes $int2_rx_bytes $int3_rx_bytes $int4_rx_bytes $int5_rx_bytes $int6_rx_bytes
-echo $int1_tx_bytes $int2_tx_bytes $int3_tx_bytes $int4_tx_bytes $int5_tx_bytes $int6_tx_bytes
+int5_bytes_total=`echo $int5_rx_thrpt + $int5_tx_thrpt | bc`
+echo "Total average megabits per second (send and receive) for $int5 :" $int5_bytes_total
+
+int6_bytes_total=`echo $int6_rx_thrpt + $int6_tx_thrpt | bc`
+echo "Total average megabits per second (send and receive) for $int6 :" $int6_bytes_total
+
+echo " "
+
+total_agg_bytes=`echo $int1_bytes_total + $int2_bytes_total + $int3_bytes_total +$int4_bytes_total + $int5_bytes_total + $int6_bytes_total | bc -l`
+echo "Total average aggregate megabits per second (send and receive):" $total_agg_bytes
+
