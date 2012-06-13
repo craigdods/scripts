@@ -17,7 +17,7 @@ cat $logfile | awk '
     ! ($1 in prevrx) {
         prevrx[$1] = $2
         prevtx[$1] = $3
-	next
+	
         
     }
     {
@@ -33,5 +33,4 @@ cat $logfile | awk '
         for (iface in rx) {
             print iface, (rx[iface] / 131072 ) / count[iface], (tx[iface] / 131072) / count[iface]
         }
-}'
-
+}' | 

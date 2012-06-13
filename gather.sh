@@ -9,7 +9,7 @@
 
 # Collect stats once per $sleep_time, in sec. Tunable.
 # 5 min by default, 86400 seconds = 1 day
-sleep_time=5
+sleep_time=600
 
 cur_time=`date +'%m%d%H%M%S'`
 LOG_FILE="CP-$cur_time.log"
@@ -39,11 +39,15 @@ do
 		echo "============== Uptime ==============="
 		uptime
 		echo "============== vmstat 1 2 ==============="
-		vmstat 1 2
-		echo "============== vmstat -ms ==============="
-		vmstat -ms
-		echo "============== cpstat -f memory os ==============="
-		cpstat -f memory os
+		vmstat 1 10
+		echo "============== free -m ==============="
+		free -m
+		echo "============== cpstat -f cpu os ==============="
+		cpstat -f cpu os
+		echo "============== fw tab -t connections -s ==============="
+		fw tab -t connections -s
+		echo "============== fw ctl pstat ==============="
+		fw ctl pstat
 
 	echo "}}}"
 	sleep $sleep_time
