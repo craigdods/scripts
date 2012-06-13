@@ -17,7 +17,7 @@ cat $logfile | awk '
     ! ($1 in prevrx) {
         prevrx[$1] = $2
         prevtx[$1] = $3
-	
+	next
         
     }
     {
