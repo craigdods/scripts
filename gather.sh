@@ -39,7 +39,7 @@ do
 		echo "============== Uptime ==============="
 		uptime
 		echo "============== vmstat 1 2 ==============="
-		vmstat 1 10
+		vmstat 1 30
 		echo "============== free -m ==============="
 		free -m
 		echo "============== cpstat -f cpu os ==============="
