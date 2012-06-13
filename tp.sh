@@ -33,4 +33,4 @@ cat $logfile | awk '
         for (iface in rx) {
             print iface, (rx[iface] / 131072 ) / count[iface], (tx[iface] / 131072) / count[iface]
         }
-}' | 
+}'
