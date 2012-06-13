@@ -19,12 +19,12 @@ int1=DMZ
 int2=Internal
 int3=External
 int4=Lan1
-int5=Lan2.403
-int6=Lan2.404
-int7=Lan2.405
-int8=Lan2.406
-int9=Lan2.407
-int10=Lan2.408
+int5=Lan2
+int6=Lan3
+#int7=Lan2.405
+#int8=Lan2.406
+#int9=Lan2.407
+#int10=Lan2.408
 
 
 cur_time=`date +'%m%d%H%M%S'`
@@ -56,10 +56,10 @@ do
 		echo -n $int4 && ethtool -S $int4 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int5 && ethtool -S $int5 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int6 && ethtool -S $int6 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
-		echo -n $int7 && ethtool -S $int7 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
-		echo -n $int8 && ethtool -S $int8 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
-		echo -n $int9 && ethtool -S $int9 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
-		echo -n $int10 && ethtool -S $int10 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		#echo -n $int7 && ethtool -S $int7 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		#echo -n $int8 && ethtool -S $int8 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		#echo -n $int9 && ethtool -S $int9 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		#echo -n $int10 && ethtool -S $int10 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 
 
 
