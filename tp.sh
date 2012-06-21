@@ -32,9 +32,15 @@ BEGIN {
     prevrx[$1] = $2
     prevtx[$1] = $3
     if (drx > maxdrx[$1]) {
+	if (drx > 7864320 ) {
+	{print "***", NR, $0}
+    }
         maxdrx[$1] = drx
     }
     if (dtx > maxdtx[$1]) {
+	if (dtx > 7864320) {
+	{print "***", NR, $0}
+}
         maxdtx[$1] = dtx
     }
 }
