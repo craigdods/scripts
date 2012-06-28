@@ -16,5 +16,3 @@ echo " "
 
 echo "You can find your routes in" `pwd`\/$logfile
 
-echo " loop test time"
-cat $logfile | awk '{print "route add -net",$1" netmask",$3" gw",$2}' $logfile | sh -x
