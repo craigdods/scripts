@@ -5,11 +5,11 @@ echo "Hello, please enter the correct log file to analyze"
 ls | grep routes
 read logfile
 
+echo "Thank you - Reubilding the routing table now"
 
-echo " loop test time"
-cat $logfile | awk '{print "route add -net",$1" netmask",$3" gw",$2}' $logfile | sh -x
+cat $logfile | awk '{print "route add -net",$1" netmask",$3" gw",$2}' $logfile | sh > /dev/null 2>&1
 
-echo "COMPLETED"
+echo "Finished rebuilding the routing table..."
 echo " "
 echo "Please remember to run route --save when finished!"
 echo "Goodbye "
