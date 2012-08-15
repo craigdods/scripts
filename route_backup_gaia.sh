@@ -9,7 +9,7 @@ echo "Backing up routes now..."
 
 echo " "
 
-netstat -nr | awk '{print $1,$2,$3}' | grep -v 'Kernel\|Destination' >> $logfile
+clish -c "show route" |  grep via | awk '{print $2,$4}' | sed 's/,//' >> $logfile
 
 echo "DONE"
 echo " "
