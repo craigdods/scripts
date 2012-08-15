@@ -9,7 +9,7 @@ echo "Backing up routes now..."
 
 echo " "
 
-clish -c "show route" | grep "S " | grep via | awk '{print $2,$4}' | sed 's/,//' >> $logfile
+clish -c "show route" | grep "S   " | grep via | awk '{print $2,$4}' | sed 's/,//' >> $logfile
 
 echo "DONE"
 echo " "

@@ -7,9 +7,10 @@ read logfile
 
 echo "Thank you - Reubilding the routing table now"
 
-cat $logfile | awk '{print "clish -c \"set static-route",$1"  \" add -net",$1" netmask",$3" gw",$2}' $logfile | sh > /dev/null 2>&1
+cat $logfile | awk '{print "clish -c \"set static-route",$1" nexthop gateway address",$2" on \""}' $logfile | sh
+clish -c "save config"
 
 echo "Finished rebuilding the routing table..."
 echo " "
-echo "Please remember to run route --save when finished!"
+echo "Please remember to verify if the routes were rebuilt correctly!!"
 echo "Goodbye "
