@@ -13,8 +13,8 @@ echo "Thank you - Rebuilding the routing table now"
 #[Expert@GAIA1]# clish -c "lock database override"
 #CLICMD0201  Config lock is already turned on.
 
-clish -c "lock database override" 
-clish -c "lock database override"
+clish -c "lock database override" > /dev/null 2>&1
+clish -c "lock database override" > /dev/null 2>&1
 
 # Route commands are split to avoid this (default has /0 which it doesn't like...):
 # CLINFR0409  IPv4 unicast bitmask check fails: Invalid bitmask value in 0.0.0.0/0; valid range is 1-32
@@ -22,14 +22,14 @@ clish -c "lock database override"
 #----^^^^^^^^^^^^^^^^^^^^^^
 
 # Add the default route:
-cat $logfile | grep 0.0.0.0\/0 | awk '{print "clish -c \"set static-route default nexthop gateway address ",$2" on \""}' | sh
+cat $logfile | grep 0.0.0.0\/0 | awk '{print "clish -c \"set static-route default nexthop gateway address ",$2" on \""}' | sh > /dev/null 2>&1
 
 # Add all of the routes (excluding default route)
-cat $logfile | sed '/0.0.0.0\/0/d' | awk '{print "clish -c \"set static-route ",$1" nexthop gateway address ",$2" on \""}' | sh
-clish -c "save config"
+cat $logfile | sed '/0.0.0.0\/0/d' | awk '{print "clish -c \"set static-route ",$1" nexthop gateway address ",$2" on \""}' | sh > /dev/null 2>&1
+clish -c "save config" > /dev/null 2>&1
 
 echo "Finished rebuilding the routing table..."
 echo " "
 echo "Please remember to verify if the routes were rebuilt correctly!!"
 echo "Goodbye "
-clish -c "unlock database"
+clish -c "unlock database" > /dev/null 2>&1
