@@ -2,7 +2,7 @@
 # Written by Craig Dods
 # This does not currently function on:
 # Firewalls with bridged interfaces (LACP)
-# Firewalls with interfaces above eth9 (single placeholder right now '.')
+# Firewalls with interface numbers above eth9 
 # Not suggested for usage on VSX.
 
 echo "Hello, please enter the correct log file to analyze"
