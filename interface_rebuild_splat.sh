@@ -12,7 +12,7 @@ read logfile
 echo "Thank you - Recreating interfaces now"
 
 # First, we do the physical interfaces
-cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1" ",$2" netmask",$3 }'
+cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1,$2" netmask",$3 }'
 cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1" up"}'
 
 # Now we do the tagged (VLAN) interfaces
