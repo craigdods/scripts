@@ -2,7 +2,7 @@
 # Written by Craig Dods
 # This does not currently function on:
 # Firewalls with bridged interfaces (LACP)
-# Firewalls with interfaces above eth9 (single placeholder right now '.'
+# Firewalls with interfaces above eth9 (single placeholder right now '.')
 # Not suggested for usage on VSX.
 
 echo "Hello, please enter the correct log file to analyze"
@@ -14,18 +14,9 @@ echo "Thank you - Recreating interfaces now"
 #Modifying original output for ifconfig (logical interfaces '.' go to ':')
 sed -i -r 's/^(eth[0-9]+)\./\1:/' $logfile
 
-# First, we do the physical interfaces
-cat $logfile | awk '{print "ifconfig",$1,$2" netmask",$3 }'
-cat $logfile | awk '{print "ifconfig",$1" up"}'
-
-#cat $logfile | grep -v "eth.\:" | awk '{print "ifconfig",$1,$2" netmask",$3 }'
-#cat $logfile | grep -v "eth.\:" | awk '{print "ifconfig",$1" up"}' | sh
-
-# Now we do the tagged (VLAN) interfaces
-#cat $logfile | grep "eth.\:" | awk '{print "ifconfig",$1,$2" netmask",$3 } 
-#cat $logfile | grep "eth.\:" | awk '{print "ifconfig",$1" up"}' | sh
-
-
+# Creating interfaces
+cat $logfile | awk '{print "ifconfig",$1,$2" netmask",$3 }' | sh
+cat $logfile | awk '{print "ifconfig",$1" up"}' | sh 
 
 #cat $logfile | awk '{print "route add -net",$1" netmask",$3" gw",$2}' $logfile | sh > /dev/null 2>&1
 
