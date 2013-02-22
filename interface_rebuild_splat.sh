@@ -15,10 +15,8 @@ echo "Thank you - Recreating interfaces now"
 sed -i -r 's/^(eth[0-9]+)\./\1:/' $logfile
 
 # Creating interfaces
-cat $logfile | awk '{print "ifconfig",$1,$2" netmask",$3 }' | sh
-cat $logfile | awk '{print "ifconfig",$1" up"}' | sh 
-
-#cat $logfile | awk '{print "route add -net",$1" netmask",$3" gw",$2}' $logfile | sh > /dev/null 2>&1
+cat $logfile | awk '{print "ifconfig",$1,$2" netmask",$3 }' | sh > /dev/null 2>&1
+cat $logfile | awk '{print "ifconfig",$1" up"}' | sh
 
 echo "Finished recreating the interfaces..."
 echo " "
