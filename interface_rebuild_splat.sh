@@ -11,12 +11,15 @@ read logfile
 
 echo "Thank you - Recreating interfaces now"
 
+#Modifying original output for ifconfig (logical interfaces '.' go to ':')
+sed -i -r 's/^(eth[0-9]+)\./\1:/' $logfile
+
 # First, we do the physical interfaces
-cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1,$2" netmask",$3 }'
-cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1" up"}'
+cat $logfile | grep -v "eth.\:" | awk '{print "ifconfig",$1,$2" netmask",$3 }' | sh
+cat $logfile | grep -v "eth.\:" | awk '{print "ifconfig",$1" up"}' | sh
 
 # Now we do the tagged (VLAN) interfaces
-#cat $logfile | grep "eth.\."
+#cat $logfile | grep "eth.\:" | awk '{print "ifconfig",$1,$2" netmask",$3 }
 
 
 
