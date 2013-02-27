@@ -13,7 +13,7 @@ echo "Thank you - Recreating interfaces now"
 
 # Creating non-VLAN interfaces 
 cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1,$2" netmask",$3 }' | sh > /dev/null 2>&1
-cat $logfile | awk '{print "ifconfig",$1" up"}' | sh
+cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1" up"}' | sh
 
 # Creating VLAN'd interfaces
 cat $logfile | grep "eth.\." | sed 's/\./ /g' | awk '{print "vconfig add",$1,$2}' | sh 
