@@ -1,5 +1,6 @@
 #!/bin/bash
 # Written by Craig Dods
+# Last Edit on 02/27/2013
 host=`hostname`
 time=`date +'%d%m%y_%H%M%S'`
 logfile=$time\_$host\_interfaces.txt
