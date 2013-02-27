@@ -16,6 +16,7 @@ cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1,$2" netmask",$3 }' |
 cat $logfile | grep -v "eth.\." | awk '{print "ifconfig",$1" up"}' | sh
 
 # Creating VLAN'd interfaces
+cat $logfile | grep "eth.\." | sed 's/\./ /g' | awk '{print "ifconfig",$1" up"}' | sh 
 cat $logfile | grep "eth.\." | sed 's/\./ /g' | awk '{print "vconfig add",$1,$2}' | sh 
 cat $logfile | grep "eth.\." | awk '{print "ifconfig",$1,$2" netmask",$3 }' | sh > /dev/null 2>&1
 cat $logfile | grep "eth.\." | awk '{print "ifconfig",$1" up"}' | sh
