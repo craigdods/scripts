@@ -4,7 +4,7 @@ host=`hostname`
 time=`date +'%d%m%y_%H%M%S'`
 logfile=$time\_$host\_interfaces.txt
 
-echo "Backing up Checkpoint tagged interfaces now..."
+echo "Backing up all interfaces now..."
 
 
 echo " "
