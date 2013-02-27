@@ -1,5 +1,6 @@
 #!/bin/bash
 # Written by Craig Dods
+# Last Edit on 02/27/2013
 # This does not currently function on:
 # Firewalls with bridged interfaces (LACP)
 # Firewalls with interface numbers above eth9 
