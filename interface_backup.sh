@@ -8,8 +8,9 @@ echo "Backing up Checkpoint tagged interfaces now..."
 
 
 echo " "
-fw getifs | sed 's/localhost //g' >> $logfile
+ifconfig -a | grep eth -A 1 | awk '{print $1,$2,$4}' | sed 's/Link HWaddr//g;s/inet addr\://g;s/Mask\://g;s/\-\-//g;/^$/ d' | grep -v 'UP\|^ ' | tr -d '\n' | sed 's/eth/\neth/g' | awk 'NF>1' >> $logfile
 echo "DONE"
 echo " "
 
 echo "You can find your interfaces in" `pwd`\/$logfile
+
