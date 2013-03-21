@@ -12,9 +12,13 @@ for network_object in NetworkObjectTag:
     class_name = network_object.getElementsByTagName("Class_Name")[0].firstChild.data
     color = network_object.getElementsByTagName("color")[0].firstChild.data
     ipElement = network_object.getElementsByTagName("ipaddr")
-    ipaddr = ipElement.firstChild.data
-    maskElement = network_object.getElementsByTagName("netmask")[0]
-    netmask = maskElement.firstChild.data
+    if ipElement:    
+        ipElement = network_object.getElementsByTagName("ipaddr")[0]
+        ipaddr = ipElement.firstChild.data
+    maskElement = network_object.getElementsByTagName("netmask")
+    if maskElement:
+        maskElement = network_object.getElementsByTagName("netmask")[0]
+        netmask = maskElement.firstChild.data
     #address_ranges
     ipaddr_first = network_object.getElementsByTagName("ipaddr_first")
     ipaddr_last = network_object.getElementsByTagName("ipaddr_last")
