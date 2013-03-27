@@ -63,9 +63,9 @@ cat $logfile | grep -v 'FW1\|'^g'' | grep " udp " | awk '{print "modify services
 cat $logfile | grep -v 'FW1\|'^g'' | grep " udp " | awk '{print "update services",$1}' >> $final
 
 # Creating host_plain
-cat $logfile | grep -v " tcp \| udp " | awk '{print "create host_plain",$1}' >> $final 
-cat $logfile | grep -v " tcp \| udp " | awk '{print "modify network_objects",$1" ipaddr",$2}' >> $final
-cat $logfile | grep -v " tcp \| udp " | awk '{print "update network_objects",$1}' >> $final
+cat $logfile | grep -vi " tcp \| udp \|net" | awk '{print "create host_plain",$1}' >> $final 
+cat $logfile | grep -vi " tcp \| udp \|net" | awk '{print "modify network_objects",$1" ipaddr",$2}' >> $final
+cat $logfile | grep -vi " tcp \| udp \|net" | awk '{print "update network_objects",$1}' >> $final
 
 # Creating networks & associated subnet logic
 cat $logfile | grep -i "net" | awk '{print "create network",$1}' >> $final
