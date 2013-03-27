@@ -110,7 +110,7 @@ echo " "
 echo "Cleaning up..."
 rm $logfile
 echo " "
-echo "Finished - you have created" $line_count "lines of dbedit commands"
+echo "Finished - you have created" $line_count "dbedit commands"
 echo " "
 echo "The commands are found in" $final
 echo " "
