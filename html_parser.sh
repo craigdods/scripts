@@ -17,7 +17,6 @@ ls | grep *.html
 read input_file
 time=`date +'%d%m%y_%H%M%S'`
 logfile=$time\_$input_file\_parsed.txt
-tmp_netfile=temp_net_file.txt
 
 # Udp Services
 echo "parsing UDP services"
@@ -38,6 +37,5 @@ echo "Done"
 # Networks
 echo "parsing Networks..."
 # Takes raw data and parses it as best we can without breaking anything, then dumps it into it's own separate file to be fixed $tmp_netfile
-cat $input_file | grep network_object | grep -v 'FW1\|wap\|group\|grp' | awk '{print $3,$4}' | awk 'NF>=2' | grep -v HP | sed 's/name="network_object_//g;s/\">/\ /g;s/<\/a><\/td><td//g;s/vAlign="top//g;s/network -//g;/[0-9]/!d' | grep -i net | egrep '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' | sed 's/ [^0-9]*/ /;'   >> $tmp_netfile
-# Fix $tmp_netfile 
+cat $input_file | grep network_object | grep -v 'FW1\|wap\|group\|grp' | awk '{print $3,$4}' | awk 'NF>=2' | grep -v HP | sed 's/name="network_object_//g;s/\">/\ /g;s/<\/a><\/td><td//g;s/vAlign="top//g;s/network -//g;/[0-9]/!d' | grep -i net | egrep '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' | sed 's/ [^0-9]*/ /;'  | awk '{gsub(/[_-]/," ",$2)}1'| grep network_object | grep -v 'FW1\|wap\|group\|grp' | awk '{print $3,$4}' | awk 'NF>=2' | grep -v HP | sed 's/name="network_object_//g;s/\">/\ /g;s/<\/a><\/td><td//g;s/vAlign="top//g;s/network -//g;/[0-9]/!d' | grep -i net | egrep '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}' | sed 's/ [^0-9]*/ /;'  | awk '{gsub(/[_-]/," ",$2)}1' >> $logfile
 echo "Done"
