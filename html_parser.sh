@@ -11,10 +11,11 @@
 
 # May require fine tuning on the sed string to pull out all erroneous/error generating symbols on a per-policy basis.
 
-echo "Hello, please enter the correct HTML file you'd like to parse"
+echo "Hello, please enter the correct HTML file you'd like to parse:"
 echo " "
 ls | grep *.html 
 read -s input_file
+echo " "
 echo "Thank you"
 echo " "
 time=`date +'%d%m%y_%H%M'`
