@@ -26,7 +26,6 @@ final=$time\_Parsed_HTML.dbedit
 echo "parsing UDP services..."
 cat $input_file | grep service | grep -v 'FW1\|wap' | awk '{print $3,$4,$5}' |  sed 's/name\=\"//g;s/\<service\_//g;s/\">/ /g;s/<\/a>/ /g;s/<\/td>//g;s/<td//g;s/vAlign\=\"//g;s/ top //g;s/userdef-//g;s/userder//g;s/usserdef//g;s/href\=\"\#//g;/[0-9]/!d;/\;/d;s/^-//g;s/\ udp/\ udp\ /gI;' | awk '{print $1,$4,$5}' | grep -i udp | awk 'NF>=3' >> $logfile
 echo "Done"
-#### For Parsing -> Use | awk 'NF >1' | awk '{print $2}' on the logfile for UDP
 
 # TCP Services
 echo " "
