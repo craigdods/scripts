@@ -108,7 +108,7 @@ cat $logfile | grep -i "net" | awk '{print "update network_objects",$1}' >> $fin
 line_count=`wc -l $final | awk '{print $1}'`
 echo " "
 echo "Cleaning up..."
-#rm $logfile
+rm $logfile
 echo " "
 echo "Finished - you have created" $line_count "dbedit commands"
 echo " "
