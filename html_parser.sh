@@ -1,6 +1,6 @@
 #!/bin/bash
 # Written by Craig Dods
-# Last Edit on 03/27/2013
+# Last Edit on 03/28/2013
 # This will attempt to pull networks, hosts, and services out a the simplified html dump
 # Things this script will have issues with:
 # Non UDP/TCP services (need XML vs html for this to work properly)
@@ -72,7 +72,7 @@ cat $logfile | grep -i "net" | awk '{print "create network",$1}' >> $final
 cat $logfile | grep -i "net" | awk '{print "modify network_objects",$1" ipaddr",$2}' >> $final
 
 #And so begin the shenanigans of trying to create networks based off of network names. The default network creation with those without specifying masks is going to be /24 - change if required on the last awk 'else' line. Since HP's engineers can't type properly, /0/1/2 fields are assigned to /24 as well
-cat $logfile | grep -i "net" | sed 's/[ \t]*$//' |awk '
+cat -v $logfile | grep -i "net" | sed 's/\^M//g;s/[ \t]*$//' |awk '
 $3==32{print "modify network_objects",$1" netmask 255.255.255.255"}
 $3==31{print "modify network_objects",$1" netmask 255.255.255.254"}
 $3==30{print "modify network_objects",$1" netmask 255.255.255.252"}
@@ -108,7 +108,7 @@ cat $logfile | grep -i "net" | awk '{print "update network_objects",$1}' >> $fin
 line_count=`wc -l $final | awk '{print $1}'`
 echo " "
 echo "Cleaning up..."
-rm $logfile
+#rm $logfile
 echo " "
 echo "Finished - you have created" $line_count "dbedit commands"
 echo " "
@@ -116,4 +116,3 @@ echo "The commands are found in" $final
 echo " "
 echo "Goodbye..."
 echo " " 
-
