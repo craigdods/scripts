@@ -13,7 +13,7 @@ time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
 
-bad_grep='removed\|replaced\|redacted\|FW1\|HackaTack\|MSN\|Napster\|Yahoo\|eDonkey\|CP_\|FIBMGR\GNUtella\KaZaA\Kerberos\MS-SQL'
+bad_grep='removed\|replaced\|redacted\|FW1\|HackaTack\|MSN\|Napster\|Yahoo\|eDonkey\|CP_\|FIBMGR\|GNUtella\|KaZaA\|Kerberos\|MS-SQL'
 
 # Network Hosts
 echo " "
