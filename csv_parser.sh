@@ -1,13 +1,6 @@
 #!/bin/bash
 # Written by Craig Dods
 # Last Edit on 04/01/2013
-# This will attempt to pull networks, hosts, and services out a the simplified html dump
-# Things this script will have issues with:
-# Non UDP/TCP services (need XML vs html for this to work properly)
-# Groups of any kind
-# It is entirely dependent on the naming scheme of the exporter. If they called something 'udp-1512' but in reality it's 'tcp-1512', or if they're labelling hosts as "Net" something...you're screwed
-
-# If you *really* need to do this properly, get XML
 
 # May require fine tuning on the sed string to pull out all erroneous/error generating symbols on a per-policy basis.
 
