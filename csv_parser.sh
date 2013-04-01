@@ -2,8 +2,6 @@
 # Written by Craig Dods
 # Last Edit on 04/01/2013
 
-# May require fine tuning on the sed string to pull out all erroneous/error generating symbols on a per-policy basis.
-
 echo "Hello, please enter the correct CSV file you'd like to parse:"
 echo " "
 ls | grep .csv 
