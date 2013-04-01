@@ -51,7 +51,7 @@ echo "Done"
 # Creating Network_Object Groups
 # Logic to separate services is not yet ready
 grep -v $bad_grep $input_file | awk NF | awk -F, '$2=="Group"{ g=$1; print "create network_object_group",g } $7!="-" && $7!=""&& $7!="Log" && $7!="Any"{print "addelement network_objects " g " \x27\x27 network_objects:" $7}' >> $final
-grep -v $bad_grep $input_file | awk NF | awk -F, '$2=="Group"{ g=$1; print "update network_objects",g }
+grep -v $bad_grep $input_file | awk NF | awk -F, '$2=="Group"{ g=$1; print "update network_objects",g }'
 
 
 line_count=`wc -l $final | awk '{print $1}'`
