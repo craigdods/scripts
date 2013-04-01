@@ -13,7 +13,7 @@ time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
 
-bad_grep='removed\|replaced\|redacted\|FW1\|HackaTack\|MSN\|Napster\|Yahoo\|eDonkey\|CP_\|FIBMGR\|GNUtella\|KaZaA\|Kerberos\|MS-SQL'
+bad_grep='removed\|replaced\|redacted\|FW1\|HackaTack\|MSN\|Napster\|Yahoo\|eDonkey\|CP_\|FIBMGR\|GNUtella\|KaZaA\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION'
 
 # Network Hosts
 echo " "
@@ -48,6 +48,9 @@ grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "modify serv
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "update services",$1}' >> $final
 echo "Done"
 
+# Creating Network_Object Groups
+# Logic to separate services is not yet ready
+grep -v $bad_grep $input_file | awk NF | awk -F, '$2=="Group"{ g=$1; print "create network_object_group",g } $7!="-"{print "addelement network_objects" g " \x27\x27 network_objects:" $7}' | grep -v "Add Any to\|add  to\|add Log to\|add Any to\|add None to\|add SERVICE\|add tcp50000\|add Members to" >> $final
 
 
 line_count=`wc -l $final | awk '{print $1}'`
