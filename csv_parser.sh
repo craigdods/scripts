@@ -13,37 +13,39 @@ time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
 
+bad_grep='removed\|replaced\|redacted\|FW1\|HackaTack\|MSN\|Napster\|Yahoo\|eDonkey\|CP_\|FIBMGR\GNUtella\KaZaA\Kerberos\MS-SQL'
+
 # Network Hosts
 echo " "
 echo "parsing and creating Network Hosts..."
 # Creating host_plain
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "create host_plain",$1}' >> $final 
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "modify network_objects",$1" ipaddr",$3}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "update network_objects",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "create host_plain",$1}' >> $final 
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "modify network_objects",$1" ipaddr",$3}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "update network_objects",$1}' >> $final
 echo "Done"
 
 # Networks
 echo " "
 echo "parsing and creating Networks..."
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Network") print "create network",$1}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Network") print "modify network_objects",$1" ipaddr",$3}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Network") print "modify network_objects",$1" netmask",$4}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Network") print "update network_objects",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Network") print "create network",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Network") print "modify network_objects",$1" ipaddr",$3}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Network") print "modify network_objects",$1" netmask",$4}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Network") print "update network_objects",$1}' >> $final
 echo "Done"
 
 # Udp Services
 echo "parsing and creating UDP services..."
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Udp") print "create udp_service",$1}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Udp") print "modify services",$1" port",$3}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Udp") print "update services",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp") print "create udp_service",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp") print "modify services",$1" port",$3}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp") print "update services",$1}' >> $final
 echo "Done"
 
 # TCP Services
 echo " "
 echo "parsing and creating TCP services..."
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "create tcp_service",$1}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "modify services",$1" port",$3}' >> $final
-grep -v 'removed\|replaced\|redacted' $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "update services",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "create tcp_service",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "modify services",$1" port",$3}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "update services",$1}' >> $final
 echo "Done"
 
 
