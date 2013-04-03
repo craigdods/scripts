@@ -59,7 +59,6 @@ echo "addelement fw_policies" $PName "rule security_header_rule"
 echo "addelement fw_policies" $PName "rule:0:action drop_action:drop"
 echo "modify fw_policies" $PName "rule:0:disabled true"
 echo "update_all"
-echo $Starting_Rule
 # Parse & Create rules
 #$1 = Rule number
 #$3 = Source
@@ -70,5 +69,6 @@ echo $Starting_Rule
 #$10 = Comments
 #cat $Rules | awk -v PN=$PName -F, '{print PN}'
 
-
-
+# Determine rule number:
+Real_RuleNumber=`awk -F, '$1 ~ "^[0-9]*$" {print $1}' $Rules`
+echo $Real_RuleNumber
