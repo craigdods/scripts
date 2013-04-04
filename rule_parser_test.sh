@@ -1,24 +1,6 @@
 #!/bin/bash
 # Written by Craig Dods
 # Last Edit on 04/02/2013
-# Example:
-
-#create policies_collection mypolicy
-#update policies_collections mypolicy
-#create firewall_policy ##mypolicy
-#modify fw_policies ##mypolicy collection policies_collections:mypolicy
-#addelement fw_policies ##mypolicy rule security_header_rule
-#addelement fw_policies ##mypolicy rule:0:action drop_action:drop
-
-#addelement fw_policies ##mypolicy rule security_rule
-#addelement fw_policies ##mypolicy rule:1:action accept_action:accept
-#modify fw_policies ##mypolicy rule:1:comments "Allow IKE between all firewalls"
-#addelement fw_policies ##mypolicy rule:1:services:'' services:IKE
-#addelement fw_policies ##mypolicy rule:1:src:'' network_objects:APL_155.14.133.11
-#addelement fw_policies ##mypolicy rule:1:dst:'' network_objects:APL_155.14.133.13
-#rmelement fw_policies ##mypolicy rule:1:track: tracks:None
-#addelement fw_policies ##mypolicy rule:1:track: tracks:Log
-#update fw_policies ##mypolicy
 
 input_file=usdlsapli001_03-06-13_scrubbed.csv
 
@@ -32,11 +14,11 @@ input_file=usdlsapli001_03-06-13_scrubbed.csv
 time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
-$awkfile=awk_file.awk
 final_rules=Rules_$input_file.dbedit
 
 #Cleaning up previous run
 rm tmp_rule_holder.txt
+rm $final_rules
 
 # Complicated rule creation section
 # Determine policy name:
@@ -105,4 +87,4 @@ $5!=""{
     curLine=curLine sprintf("\nupdate fw_policies " PN "\n");
 }
 
-END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g' >> $final_rules
+END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;/sg-/d' >> $final_rules
