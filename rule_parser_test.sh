@@ -40,7 +40,6 @@ echo "modify fw_policies" $PName "collection policies_collections:"$PName_col >>
 echo "addelement fw_policies" $PName "rule security_header_rule" >> $final_rules
 echo "addelement fw_policies" $PName "rule:0:action drop_action:drop" >> $final_rules
 echo "modify fw_policies" $PName "rule:0:disabled true" >> $final_rules
-echo "update_all" >> $final_rules
 # Parse & Create rules
 #$1 = Rule number
 #$3 = Source
@@ -59,8 +58,8 @@ $1!="" {
     print curLine,"\n"
     recNum++;
     $1=recNum;
-    curLine=sprintf("update fw_policies" PN "\n");
-    curLine=sprintf("addelement fw_policies " PN " rule security_rule\naddelement fw_policies " PN " rule:"$1":action accept_action:"$6);
+
+    curLine=sprintf("update_all\naddelement fw_policies " PN " rule security_rule\naddelement fw_policies " PN " rule:"$1":action accept_action:"$6);
     curLine=curLine sprintf("\nmodify fw_policies " PN " rule:"$1":comments \""$10"\"""\n");
     curLine=curLine sprintf("\nrmelement fw_policies " PN " rule:"$1":track: tracks:None""\n");
     curLine=curLine sprintf("\naddelement fw_policies " PN " rule:"$1":track: tracks:Log""\n");
@@ -76,8 +75,7 @@ $4!=""{
     curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":dst:\x27\x27 network_objects:"$4"\n");
 }
 $5!=""{
-    curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":services:\x27\x27 services:"$5"\n");
-    curLine=curLine sprintf("\nupdate_all \n");
+    curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":services:\x27\x27 services:"$5"\n");    
 }
 
-END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;s/network_objects:HP network - removed/network_objects:DUMMY_HOST_REMOVE/g;s/grp-eds/DUMMY_HOST_REMOVE/g;s/apl_avondale_65.37.225.10-65.37.225.14/DUMMY_HOST_REMOVE/g;s/range_169.10.244.201-3/DUMMY_HOST_REMOVE/g' >> $final_rules
+END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;s/network_objects:HP network - removed/network_objects:DUMMY_HOST_REMOVE/g;s/grp-eds/DUMMY_HOST_REMOVE/g;s/services:ISAKMP/services:IKE/g;s/ghttp/http/g;s/gftp/ftp/g;s/ws-domaincontroller-78.182/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.18/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.19/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.22/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.28/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.7/DUMMY_HOST_REMOVE/g;s/Eds_mail_relay_srvrs/DUMMY_HOST_REMOVE/g;s/EDS_GNOC_nets/DUMMY_HOST_REMOVE/g;s/EDS_EPCM_SRVR/DUMMY_HOST_REMOVE/g;s/EDS_NET_MGMT_NETS/DUMMY_HOST_REMOVE/g;' >> $final_rules
