@@ -18,7 +18,7 @@ SG=ServiceGroups_to_pop_manually.txt
 SpecialHosts=SpecialHosts.txt
 
 #Add known bad objects/services here
-bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255"
+bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255\|grp-eds"
 
 # Cleanup from previous runs
 rm $final  
@@ -33,11 +33,11 @@ echo "update network_objects DUMMY_HOST_REMOVE" >> $final
 # APL_VOIP_Dom:
 Special_Hosts="APL_VOIP_Dom - VoIP Domain - No info provided"
 echo "create host_plain APL_VOIP_Dom" >> $final
-echo "modify network_objects APL_VOIP_Dom ipaddr 1.1.1.1" >> $final
+echo "modify network_objects APL_VOIP_Dom ipaddr 1.1.1.2" >> $final
 echo "update network_objects APL_VOIP_Dom" >> $final
 echo $Special_Hosts >> $SpecialHosts
 
-# Network Hosts
+# Network Hosts 
 echo " "
 echo "parsing and creating Network Hosts..."
 # Creating host_plain
@@ -73,9 +73,9 @@ echo "Done"
 # Creating empty Service groups
 echo " "
 echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem' | awk -F, '{print "create service_group " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem' | awk -F, '{print "update services" $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem' | awk -F, '{print $1}' >> $SG
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS' | awk -F, '{print "update services " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS' | awk -F, '{print $1}' >> $SG
 echo "Done"
 
 # Creating Network_Object Groups
