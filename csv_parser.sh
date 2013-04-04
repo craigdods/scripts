@@ -14,16 +14,23 @@ echo " "
 time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
+final_rules=Rules_$input_file.dbedit
 SG=ServiceGroups_to_pop_manually.txt
 SpecialHosts=SpecialHosts.txt
+Rules=tmp_rule_holder.txt
 
 #Add known bad objects/services here
-bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255\|grp-eds"
+bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
+
+#apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255\
 
 # Cleanup from previous runs
 rm $final  
 rm $SG 
 rm $SpecialHosts
+rm $Rules
+rm $final_rules
+
 # Create Dummy Host to replace 'HP network - removed' if they used it in their hostnames...(consistency people!)
 echo "create host_plain DUMMY_HOST_REMOVE" >> $final
 echo "modify network_objects DUMMY_HOST_REMOVE ipaddr 1.1.1.1" >> $final
@@ -35,6 +42,7 @@ Special_Hosts="APL_VOIP_Dom - VoIP Domain - No info provided"
 echo "create host_plain APL_VOIP_Dom" >> $final
 echo "modify network_objects APL_VOIP_Dom ipaddr 1.1.1.2" >> $final
 echo "update network_objects APL_VOIP_Dom" >> $final
+echo ""
 echo $Special_Hosts >> $SpecialHosts
 
 # Network Hosts 
@@ -44,6 +52,15 @@ echo "parsing and creating Network Hosts..."
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "create host_plain",$1}' >> $final 
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "modify network_objects",$1" ipaddr",$3}' >> $final
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Host Node") print "update network_objects",$1}' >> $final
+echo "Done"
+
+# Address Ranges
+echo " "
+echo "parsing and creating Address Ranges..."
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Address Range") print "create network",$1}' >> $final
+grep -v $bad_grep $input_file | sed 's/,/\ /g' | awk '{if ($2=="Address" && $3=="Range")print "modify network_objects",$1" ipaddr_first",$4}' >> $final
+grep -v $bad_grep $input_file | sed 's/,/\ /g' | awk '{if ($2=="Address" && $3=="Range")print "modify network_objects",$1" ipaddr_last",$6}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Address Range") print "update network_objects",$1}' >> $final
 echo "Done"
 
 # Networks
