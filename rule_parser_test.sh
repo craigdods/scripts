@@ -84,7 +84,7 @@ $4!=""{
 }
 $5!=""{
     curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":services:\x27\x27 services:"$5"\n");
-    curLine=curLine sprintf("\nupdate fw_policies " PN "\n");
+    curLine=curLine sprintf("\nupdate_all \n");
 }
 
-END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;/sg-/d' >> $final_rules
+END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;s/network_objects:HP network - removed/network_objects:DUMMY_HOST_REMOVE/g;s/grp-eds/DUMMY_HOST_REMOVE/g' >> $final_rules
