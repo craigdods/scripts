@@ -83,8 +83,8 @@ $1!="" {
     print curLine,"\n"
     recNum++;
     $1=recNum;
-    curLine=sprintf("addelement fw_policies " PN " rule security_rule\ncreate action rule %d %s\n",$1,$6);
-    curLine=curLine sprintf("create comment rule %d \"%s\"\n",$1,$10);
+    curLine=sprintf("addelement fw_policies " PN " rule security_rule\naddelement fw_policies " PN " rule:"$1":action accept_action:"$6);
+    curLine=curLine sprintf("\ncreate comment rule %d \"%s\"\n",$1,$10);
     curLine=curLine sprintf("create track rule %d %s\n",$1,$7);
 }
 $1=="" {
