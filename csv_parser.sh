@@ -20,7 +20,7 @@ SpecialHosts=SpecialHosts.txt
 Rules=tmp_rule_holder.txt
 
 #Add known bad objects/services here
-bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
+bad_grep="HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
 
 #apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255\
 
@@ -63,7 +63,7 @@ grep -v $bad_grep $input_file | sed 's/,/\ /g' | awk '{if ($2=="Address" && $3==
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Address Range") print "update network_objects",$1}' >> $final
 echo "Done"
 
-# Networks
+# Networksc
 echo " "
 echo "parsing and creating Networks..."
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Network") print "create network",$1}' >> $final
