@@ -57,7 +57,7 @@ echo "Done"
 # Address Ranges
 echo " "
 echo "parsing and creating Address Ranges..."
-grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Address Range") print "create network",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Address Range") print "create address_range",$1}' >> $final
 grep -v $bad_grep $input_file | sed 's/,/\ /g' | awk '{if ($2=="Address" && $3=="Range")print "modify network_objects",$1" ipaddr_first",$4}' >> $final
 grep -v $bad_grep $input_file | sed 's/,/\ /g' | awk '{if ($2=="Address" && $3=="Range")print "modify network_objects",$1" ipaddr_last",$6}' >> $final
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Address Range") print "update network_objects",$1}' >> $final
