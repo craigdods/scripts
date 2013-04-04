@@ -14,8 +14,10 @@ echo " "
 time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
+SG=ServiceGroups_to_pop_manually.txt
 
-bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network"
+#Add known bad objects/services here
+bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182"
 
 # Cleanup from previous runs
 rm $final
@@ -53,6 +55,13 @@ grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "modify serv
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "update services",$1}' >> $final
 echo "Done"
 
+# Creating empty Service groups
+echo " "
+echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem' | awk -F, '{print "update services" $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem' | awk -F, '{print $1}' >> $SG
+
 # Creating Network_Object Groups
 # If additional services get pulled in, just add it to the grep -v string at the end
 
@@ -87,6 +96,8 @@ echo " "
 echo "Finished - you have created" $line_count "dbedit commands"
 echo " "
 echo "The commands are found in" $final
+echo " "
+echo "The Service Groups you need to populate manually are found in" $SG
 echo " "
 echo "Goodbye..."
 echo " " 
