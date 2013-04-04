@@ -15,7 +15,10 @@ time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
 
-bad_grep='removed\|replaced\|redacted\|FW1\|HackaTack\|MSN\|Napster\|Yahoo\|eDonkey\|CP_\|FIBMGR\|GNUtella\|KaZaA\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION'
+bad_grep="FW1\|HackaTack\|MSN\|CP_\|FIBMGR\|Kerberos\|MS-SQL\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network"
+
+# Cleanup from previous runs
+rm $final
 
 # Network Hosts
 echo " "
@@ -60,21 +63,21 @@ grep -v $bad_grep $input_file | awk NF | awk -F, '$2=="Group"{ g=$1; print "upda
 
 # Complicated rule creation section
 # Determine policy name:
-Rules=tmp_rule_holder.txt
+#Rules=tmp_rule_holder.txt
 #Extract the rulebase from the original CSV to ease parsing:
-cat $input_file | sed -n '/Security Policy:/,/Top of table/p' | grep -v "Top of table" >> $Rules
+#cat $input_file | sed -n '/Security Policy:/,/Top of table/p' | grep -v "Top of table" >> $Rules
 
-PolName=`grep "Security Policy:" $Rules | awk -F, '{print $1}' | awk '{print $3}'`
-PName_col=$PolName\_scripted
-PName=##$PolName\_scripted
+#PolName=`grep "Security Policy:" $Rules | awk -F, '{print $1}' | awk '{print $3}'`
+#PName_col=$PolName\_scripted
+#PName=##$PolName\_scripted
 
 #Create the new rulebase and default rule0
-echo "create policies_collection" $PName_col
-echo "update policies_collections" $PName
-echo "create firewall_policy" $PName
-echo "modify fw_policies" $PName "collection policies_collections:"$PName_col
-echo "addelement fw_policies" $PName "rule security_header_rule"
-echo "addelement fw_policies" $PName "rule:0:action drop_action:drop"
+#echo "create policies_collection" $PName_col
+#echo "update policies_collections" $PName
+#echo "create firewall_policy" $PName
+#echo "modify fw_policies" $PName "collection policies_collections:"$PName_col
+#echo "addelement fw_policies" $PName "rule security_header_rule"
+#echo "addelement fw_policies" $PName "rule:0:action drop_action:drop"
 
 
 line_count=`wc -l $final | awk '{print $1}'`
