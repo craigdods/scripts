@@ -73,9 +73,9 @@ echo "Done"
 # Creating empty Service groups
 echo " "
 echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS' | awk -F, '{print "create service_group " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS' | awk -F, '{print "update services " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS' | awk -F, '{print $1}' >> $SG
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS\|service' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS\|service' | awk -F, '{print "update services " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS\|service' | awk -F, '{print $1}' >> $SG
 echo "Done"
 
 # Creating Network_Object Groups
