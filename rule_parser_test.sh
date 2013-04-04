@@ -83,24 +83,31 @@ $1!="" {
     print curLine,"\n"
     recNum++;
     $1=recNum;
+    curLine=sprintf("update fw_policies" PN "\n");
     curLine=sprintf("addelement fw_policies " PN " rule security_rule\naddelement fw_policies " PN " rule:"$1":action accept_action:"$6);
-    curLine=curLine sprintf("\ncreate comment rule %d \"%s\"\n",$1,$10);
-    curLine=curLine sprintf("create track rule %d %s\n",$1,$7);
+    curLine=curLine sprintf("\nmodify fw_policies " PN " rule:"$1":comments \""$10"\"""\n");
+    curLine=curLine sprintf("\nrmelement fw_policies " PN " rule:"$1":track: tracks:None""\n");
+    curLine=curLine sprintf("\naddelement fw_policies " PN " rule:"$1":track: tracks:Log""\n");
 }
 $1=="" {
     $1=recNum;
 }
 
 $3!=""{
-    curLine=curLine sprintf("create source rule %d %s\n",$1,$3);
+    curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":src:\x27\x27 network_objects:"$3"\n");
 }
 $4!=""{
-    curLine=curLine sprintf("create destination rule %d %s\n",$1,$4);
+    curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":dst:\x27\x27 network_objects:"$4"\n");
 }
 $5!=""{
-    curLine=curLine sprintf("create service rule %d %s\n",$1,$5);
+    curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":services:\x27\x27 services:"$5"\n");
+    curLine=curLine sprintf("\nupdate fw_policies " PN "\n");
 }
-END {print curLine}' $Rules | awk NF
+
+END {print curLine "\nupdate fw_policies" PN}' $Rules | awk NF
+
+#MAY HAVE TO USE SED TO REPLACE ANY with GLOBALANY
+
 
 #cat $Rules | grep -v "Security Policy:" | awk -f $awk_file $
 
