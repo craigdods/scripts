@@ -33,6 +33,7 @@ time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
 $awkfile=awk_file.awk
+final_rules=Rules_$input_file.dbedit
 
 #Cleaning up previous run
 rm tmp_rule_holder.txt
@@ -52,15 +53,15 @@ PName=##$PolName\_scripted
 #Starting_Rule=`awk -F, 'NR==2 {print $1 -1 }' $Rules`
 
 #Create the new rulebase and default rule0
-echo "update_all"
-echo "create policies_collection" $PName_col
-echo "update policies_collections" $PName_col
-echo "create firewall_policy" $PName
-echo "modify fw_policies" $PName "collection policies_collections:"$PName_col
-echo "addelement fw_policies" $PName "rule security_header_rule"
-echo "addelement fw_policies" $PName "rule:0:action drop_action:drop"
-echo "modify fw_policies" $PName "rule:0:disabled true"
-echo "update_all"
+echo "update_all" >> $final_rules
+echo "create policies_collection" $PName_col >> $final_rules
+echo "update policies_collections" $PName_col >> $final_rules
+echo "create firewall_policy" $PName >> $final_rules
+echo "modify fw_policies" $PName "collection policies_collections:"$PName_col >> $final_rules
+echo "addelement fw_policies" $PName "rule security_header_rule" >> $final_rules
+echo "addelement fw_policies" $PName "rule:0:action drop_action:drop" >> $final_rules
+echo "modify fw_policies" $PName "rule:0:disabled true" >> $final_rules
+echo "update_all" >> $final_rules
 # Parse & Create rules
 #$1 = Rule number
 #$3 = Source
@@ -104,11 +105,4 @@ $5!=""{
     curLine=curLine sprintf("\nupdate fw_policies " PN "\n");
 }
 
-END {print curLine "\nupdate fw_policies" PN}' $Rules | awk NF
-
-#MAY HAVE TO USE SED TO REPLACE ANY with GLOBALANY
-
-
-#cat $Rules | grep -v "Security Policy:" | awk -f $awk_file $
-
-
+END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g' >> $final_rules
