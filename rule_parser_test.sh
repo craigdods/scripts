@@ -32,6 +32,7 @@ input_file=usdlsapli001_03-06-13_scrubbed.csv
 time=`date +'%d%m%y_%H%M'`
 #logfile=$time\_$input_file\_parsed.txt
 final=Parsed_$input_file.dbedit
+$awkfile=awk_file.awk
 
 #Cleaning up previous run
 rm tmp_rule_holder.txt
@@ -40,14 +41,15 @@ rm tmp_rule_holder.txt
 # Determine policy name:
 Rules=tmp_rule_holder.txt
 #Extract the rulebase from the original CSV to ease parsing:
-cat $input_file | sed -n '/Security Policy:/,/Top of table/p' | grep -v "Top of table\|SOURCE,DESTINATION\|rulebase" >> $Rules
+cat $input_file | sed -n '/Security Policy:/,/Top of table/p' | grep -v "Top of table\|SOURCE,DESTINATION\|rulebase\|Security Policy:" >> $Rules
 
-PolName=`grep "Security Policy:" $Rules | awk -F, '{print $1}' | awk '{print $3}'`
+
+PolName=`grep "Security Policy:" $input_file | awk -F, '{print $1}' | awk '{print $3}'`
 PName_col=$PolName\_scripted
 PName=##$PolName\_scripted
 #Takes Unscrubbed policy (HP exports with global policy) - rules start with 12 or higher - need to adjust for dbedit to work
 #Will subtract the number in $1 by $Starting_Rule to give it the correct number. So rule #12 becomes #1, #13 becomes #2, etc. 
-Starting_Rule=`awk -F, 'NR==2 {print $1 -1 }' $Rules`
+#Starting_Rule=`awk -F, 'NR==2 {print $1 -1 }' $Rules`
 
 #Create the new rulebase and default rule0
 echo "update_all"
@@ -70,5 +72,36 @@ echo "update_all"
 #cat $Rules | awk -v PN=$PName -F, '{print PN}'
 
 # Determine rule number:
-Real_RuleNumber=`awk -F, '$1 ~ "^[0-9]*$" {print $1}' $Rules`
-echo $Real_RuleNumber
+#Real_RuleNumber=`awk -F, '$1 ~ "^[0-9]*$" {print $1}' $Rules`
+#echo $Real_RuleNumber
+
+awk -v PN=$PName 'BEGIN{
+    FS=",";recNum=0;curLine=""
+}
+
+$1!="" {
+    print curLine,"\n"
+    recNum++;
+    $1=recNum;
+    curLine=sprintf("addelement fw_policies " PN " rule security_rule\ncreate action rule %d %s\n",$1,$6);
+    curLine=curLine sprintf("create comment rule %d \"%s\"\n",$1,$10);
+    curLine=curLine sprintf("create track rule %d %s\n",$1,$7);
+}
+$1=="" {
+    $1=recNum;
+}
+
+$3!=""{
+    curLine=curLine sprintf("create source rule %d %s\n",$1,$3);
+}
+$4!=""{
+    curLine=curLine sprintf("create destination rule %d %s\n",$1,$4);
+}
+$5!=""{
+    curLine=curLine sprintf("create service rule %d %s\n",$1,$5);
+}
+END {print curLine}' $Rules | awk NF
+
+#cat $Rules | grep -v "Security Policy:" | awk -f $awk_file $
+
+
