@@ -20,7 +20,7 @@ SpecialHosts=SpecialHosts.txt
 Rules=tmp_rule_holder.txt
 
 #Add known bad objects/services here
-bad_grep="HackaTack\|MSN\|CP_[^S]\|FIBMGR\|Kerberos\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
+bad_grep="HackaTack\|MSN\|CP_[^S]\|Kerberos\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
 
 #apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255\
 
@@ -36,13 +36,30 @@ echo "create host_plain DUMMY_HOST_REMOVE" >> $final
 echo "modify network_objects DUMMY_HOST_REMOVE ipaddr 1.1.1.1" >> $final
 echo "update network_objects DUMMY_HOST_REMOVE" >> $final
 
-# Special Case hosts - VoIP Domains etc. Create manually - Request customer provide info regarding these 
+# Special Case objects - VoIP Domains etc. Create manually - Request customer provide info regarding these 
 # APL_VOIP_Dom:
 Special_Hosts="APL_VOIP_Dom - VoIP Domain - No info provided"
 echo "create host_plain APL_VOIP_Dom" >> $final
 echo "modify network_objects APL_VOIP_Dom ipaddr 1.1.1.2" >> $final
 echo "update network_objects APL_VOIP_Dom" >> $final
-echo ""
+
+#These don't exist in CSV, and yet somehow they're part of rules...
+echo "create tcp_service TCP-10565-10569" >> $final
+echo "modify services TCP-10565-10569 port 10565-10569" >> $final
+echo "update services TCP-10565-10569" >> $final
+echo "create udp_service UDP-10565-10569" >> $final
+echo "modify services UDP-10565-10569 port 10565-10569" >> $final
+echo "update services UDP-10565-10569" >> $final
+echo "create host_plain LHost_155.14.78.6" >> $final
+echo "modify network_objects LHost_155.14.78.6 ipaddr 155.14.78.6" >> $final
+echo "update network_objects LHost_155.14.78.6" >> $final
+
+
+
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp" || $2=="tcp") print "create tcp_service",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp" || $2=="tcp") print "modify services",$1" port",$3}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp" || $2=="tcp") print "update services",$1}' >> $final
+
 echo $Special_Hosts >> $SpecialHosts
 
 # Network Hosts 
@@ -74,25 +91,25 @@ echo "Done"
 
 # Udp Services
 echo "parsing and creating UDP services..."
-grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp") print "create udp_service",$1}' >> $final
-grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp") print "modify services",$1" port",$3}' >> $final
-grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp") print "update services",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp" || $2=="udp") print "create udp_service",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp" || $2=="udp") print "modify services",$1" port",$3}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Udp" || $2=="udp") print "update services",$1}' >> $final
 echo "Done"
 
 # TCP Services
 echo " "
 echo "parsing and creating TCP services..."
-grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "create tcp_service",$1}' >> $final
-grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "modify services",$1" port",$3}' >> $final
-grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp") print "update services",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp" || $2=="tcp") print "create tcp_service",$1}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp" || $2=="tcp") print "modify services",$1" port",$3}' >> $final
+grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp" || $2=="tcp") print "update services",$1}' >> $final
 echo "Done"
 
 # Creating empty Service groups
 echo " "
 echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print "create service_group " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print "update services " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print $1}' >> $SG
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp' | awk -F, '{print "update services " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp' | awk -F, '{print $1}' >> $SG
 echo "Done"
 
 # Creating Network_Object Groups
