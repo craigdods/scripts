@@ -2,7 +2,7 @@
 # Written by Craig Dods
 # Last Edit on 04/02/2013
 
-input_file=usdlsapli001_03-06-13_scrubbed.csv
+input_file=usplsaplc004_03-06-13_scrubbed.csv
 
 #echo "Hello, please enter the correct CSV file you'd like to parse:"
 #echo " "
@@ -44,6 +44,12 @@ echo "modify fw_policies" $PName "rule:0:disabled true" >> $final_rules
 #$1 = Rule number
 #$3 = Source
 #$4 = Destination
+#### IF SIMPLIFIED - NEED TO MODIFY
+#$6 = Service
+#$7 = Action
+#$8 = Track
+#$11 = Comments
+#### IF TRAD
 #$5 = Service
 #$6 = Action
 #$7 = Track
@@ -59,8 +65,8 @@ $1!="" {
     recNum++;
     $1=recNum;
 
-    curLine=sprintf("update_all\naddelement fw_policies " PN " rule security_rule\naddelement fw_policies " PN " rule:"$1":action accept_action:"$6);
-    curLine=curLine sprintf("\nmodify fw_policies " PN " rule:"$1":comments \""$10"\"""\n");
+    curLine=sprintf("update_all\naddelement fw_policies " PN " rule security_rule\naddelement fw_policies " PN " rule:"$1":action accept_action:"$7);
+    curLine=curLine sprintf("\nmodify fw_policies " PN " rule:"$1":comments \""$11"\"""\n");
     curLine=curLine sprintf("\nrmelement fw_policies " PN " rule:"$1":track: tracks:None""\n");
     curLine=curLine sprintf("\naddelement fw_policies " PN " rule:"$1":track: tracks:Log""\n");
 }
@@ -74,8 +80,11 @@ $3!=""{
 $4!=""{
     curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":dst:\x27\x27 network_objects:"$4"\n");
 }
-$5!=""{
-    curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":services:\x27\x27 services:"$5"\n");    
+$6!=""{
+    curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":services:\x27\x27 services:"$6"\n");    
 }
 
-END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;s/network_objects:HP network - removed/network_objects:DUMMY_HOST_REMOVE/g;s/grp-eds/DUMMY_HOST_REMOVE/g;s/services:ISAKMP/services:IKE/g;s/ghttp/http/g;s/gftp/ftp/g;s/ws-domaincontroller-78.182/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.18/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.19/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.22/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.28/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.7/DUMMY_HOST_REMOVE/g;s/Eds_mail_relay_srvrs/DUMMY_HOST_REMOVE/g;s/EDS_GNOC_nets/DUMMY_HOST_REMOVE/g;s/EDS_EPCM_SRVR/DUMMY_HOST_REMOVE/g;s/EDS_NET_MGMT_NETS/DUMMY_HOST_REMOVE/g;s/g_OPSWARE_SVR_PL/DUMMY_HOST_REMOVE/g' >> $final_rules
+END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;s/network_objects:HP network - removed/network_objects:DUMMY_HOST_REMOVE/g;s/grp-eds/DUMMY_HOST_REMOVE/g;s/services:ISAKMP/services:IKE/g;s/ghttp/http/g;s/gftp/ftp/g;s/ws-domaincontroller-78.182/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.18/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.19/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.22/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.28/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.7/DUMMY_HOST_REMOVE/g;s/Eds_mail_relay_srvrs/DUMMY_HOST_REMOVE/g;s/EDS_GNOC_nets/DUMMY_HOST_REMOVE/g;s/EDS_EPCM_SRVR/DUMMY_HOST_REMOVE/g;s/EDS_NET_MGMT_NETS/DUMMY_HOST_REMOVE/g;s/g_OPSWARE_SVR_PL/DUMMY_HOST_REMOVE/g;s/NOL_hp_interconnect/DUMMY_HOST_REMOVE/g;s/NOL_hp_interconnect/DUMMY_HOST_REMOVE/g' >> $final_rules
+
+# Here is where we do the automated cleanup to reduce manual effort:
+grep "HP\ network - removed" $input_file | awk '{print $1}' | grep -vi ",,,,,,HP\|^HP\|,,HP\|^[0-9]\|Cluster\|Check" | awk -F, -v RFILE=$final_rules '{print "sed -i \x27s/"$1"/DUMMY_HOST_REMOVE/g\x27 "RFILE}' | sh
