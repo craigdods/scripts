@@ -63,7 +63,7 @@ grep -v $bad_grep $input_file | sed 's/,/\ /g' | awk '{if ($2=="Address" && $3==
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Address Range") print "update network_objects",$1}' >> $final
 echo "Done"
 
-# Networksc
+# Networks
 echo " "
 echo "parsing and creating Networks..."
 grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Network") print "create network",$1}' >> $final
@@ -90,9 +90,9 @@ echo "Done"
 # Creating empty Service groups
 echo " "
 echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print "create service_group " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print "update services " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print $1}' >> $SG
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print "update services " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE' | awk -F, '{print $1}' >> $SG
 echo "Done"
 
 # Creating Network_Object Groups
