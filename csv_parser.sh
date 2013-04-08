@@ -20,16 +20,16 @@ SpecialHosts=SpecialHosts.txt
 Rules=tmp_rule_holder.txt
 
 #Add known bad objects/services here
-bad_grep="HackaTack\|MSN\|CP_[^S]\|Kerberos\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
+bad_grep="HackaTack\|MSN\|CP_[^0-9][^S]\|Kerberos\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
 
 #apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255\
 
 # Cleanup from previous runs
 rm $final  
 rm $SG 
-rm $SpecialHosts
-rm $Rules
-rm $final_rules
+#rm $SpecialHosts
+#rm $Rules
+#rm $final_rules
 
 # Create Dummy Host to replace 'HP network - removed' if they used it in their hostnames...(consistency people!)
 echo "create host_plain DUMMY_HOST_REMOVE" >> $final
@@ -53,6 +53,12 @@ echo "update services UDP-10565-10569" >> $final
 echo "create host_plain LHost_155.14.78.6" >> $final
 echo "modify network_objects LHost_155.14.78.6 ipaddr 155.14.78.6" >> $final
 echo "update network_objects LHost_155.14.78.6" >> $final
+echo "create tcp_service g_tcp7774" >> $final
+echo "modify services g_tcp7774 port 7774" >> $final
+echo "update services g_tcp7774" >> $final
+echo "create udp_service g_udp6665" >> $final
+echo "modify services g_udp6665 port 6665" >> $final
+echo "update services g_udp6665" >> $final
 
 
 
@@ -113,7 +119,6 @@ grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Por
 echo "Done"
 
 # Creating Network_Object Groups
-# If additional services get pulled in, just add it to the grep -v string at the end
 
 grep -v $bad_grep $input_file | awk NF | awk -F, '$2=="Group"{ g=$1; print "create network_object_group",g "\nupdate network_objects",g } $7!="-" && $7!=""&& $7!="Log" && $7!="Any"{print "addelement network_objects " g " \x27\x27 network_objects:" $7 "\nupdate network_objects",g}' | grep -vi 'udp/tcp'>> $final
 
