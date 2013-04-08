@@ -1,8 +1,8 @@
 #!/bin/bash
 # Written by Craig Dods
-# Last Edit on 04/02/2013
+# Last Edit on 04/08/2013
 
-input_file=usplsaplc004_03-06-13_scrubbed.csv
+input_file=usplsaplp001_03-06-13_scrubbed.csv
 
 #echo "Hello, please enter the correct CSV file you'd like to parse:"
 #echo " "
@@ -49,7 +49,7 @@ echo "modify fw_policies" $PName "rule:0:disabled true" >> $final_rules
 #$7 = Action
 #$8 = Track
 #$11 = Comments
-#### IF TRAD
+#### IF TRADITIONAL
 #$5 = Service
 #$6 = Action
 #$7 = Track
@@ -84,7 +84,9 @@ $6!=""{
     curLine=curLine sprintf("addelement fw_policies " PN " rule:"$1":services:\x27\x27 services:"$6"\n");    
 }
 
-END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;s/network_objects:HP network - removed/network_objects:DUMMY_HOST_REMOVE/g;s/grp-eds/DUMMY_HOST_REMOVE/g;s/services:ISAKMP/services:IKE/g;s/ghttp/http/g;s/gftp/ftp/g;s/ws-domaincontroller-78.182/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.18/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.19/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.22/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.28/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.7/DUMMY_HOST_REMOVE/g;s/Eds_mail_relay_srvrs/DUMMY_HOST_REMOVE/g;s/EDS_GNOC_nets/DUMMY_HOST_REMOVE/g;s/EDS_EPCM_SRVR/DUMMY_HOST_REMOVE/g;s/EDS_NET_MGMT_NETS/DUMMY_HOST_REMOVE/g;s/g_OPSWARE_SVR_PL/DUMMY_HOST_REMOVE/g;s/NOL_hp_interconnect/DUMMY_HOST_REMOVE/g;s/NOL_hp_interconnect/DUMMY_HOST_REMOVE/g;s/IBM_172.17.232.13/DUMMY_HOST_REMOVE/g;s/INAT_172.17.220.189/DUMMY_HOST_REMOVE/g;' >> $final_rules
+END {print curLine "\nupdate_all"}' $Rules | awk NF | sed 's/services:Any/globals:Any/g;s/network_objects:Any/globals:Any/g;s/accept_action:drop/drop_action:drop/g;s/network_objects:HP network - removed/network_objects:DUMMY_HOST_REMOVE/g;s/grp-eds/DUMMY_HOST_REMOVE/g;s/services:ISAKMP/services:IKE/g;s/ghttp/http/g;s/gftp/ftp/g;s/ws-domaincontroller-78.182/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.18/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.19/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.22/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.28/DUMMY_HOST_REMOVE/g;s/ws-ext-pacer-1.7/DUMMY_HOST_REMOVE/g;s/Eds_mail_relay_srvrs/DUMMY_HOST_REMOVE/g;s/EDS_GNOC_nets/DUMMY_HOST_REMOVE/g;s/EDS_EPCM_SRVR/DUMMY_HOST_REMOVE/g;s/EDS_NET_MGMT_NETS/DUMMY_HOST_REMOVE/g;s/g_OPSWARE_SVR_PL/DUMMY_HOST_REMOVE/g;s/NOL_hp_interconnect/DUMMY_HOST_REMOVE/g;s/NOL_hp_interconnect/DUMMY_HOST_REMOVE/g;s/IBM_172.17.232.13/DUMMY_HOST_REMOVE/g;s/INAT_172.17.220.189/DUMMY_HOST_REMOVE/g;s/ext_HP network - removed/DUMMY_HOST_REMOVE/g;s/GLOBALfirewall/DUMMY_HOST_REMOVE/g;s/aplp001_cluster/DUMMY_HOST_REMOVE/g;s/echo-dest-unreachabe/dest-unreach/g;s/echo-time-exceed/time-exceeded/g;s/ext_net_60.90.128.0_26/Ext_net_60.90.128.0_26/g;s/Apl_155.14.64.15/apl_155.14.64.15/g' >> $final_rules 
 
 # Here is where we do the automated cleanup to reduce manual effort:
-grep "HP\ network - removed" $input_file | awk '{print $1}' | grep -vi ",,,,,,HP\|^HP\|,,HP\|^[0-9]\|Cluster\|Check" | awk -F, -v RFILE=$final_rules '{print "sed -i \x27s/"$1"/DUMMY_HOST_REMOVE/g\x27 "RFILE}' | sh
+grep "HP\ network - removed\|HP network -removed" $input_file | awk '{print $1}' | grep -v ",,,,,,HP\|^HP\|,,HP\|^[0-9]\|Cluster\|Check\|,,ext_HP\|,,apl_net_10.6.2.0_25,HP" | awk -F, -v RFILE=$final_rules '{print "sed -i \x27s/"$1"/DUMMY_HOST_REMOVE/g\x27 "RFILE}' | sh
+
+rm -rf sed*
