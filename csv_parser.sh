@@ -1,6 +1,6 @@
 #!/bin/bash
 # Written by Craig Dods
-# Last Edit on 04/02/2013
+# Last Edit on 04/08/2013
 # Service groups are currently non-functional due to the way CSV is created -> addelement requires separate types of objects (services vs network_objects), however it seems HP has added services into network groups (somehow...). For now, they do not work. 
 # Manually edit out services from addelement before putting it into a CMA
 
@@ -107,9 +107,9 @@ echo "Done"
 # Creating empty Service groups
 echo " "
 echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp' | awk -F, '{print "create service_group " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp' | awk -F, '{print "update services " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp' | awk -F, '{print $1}' >> $SG
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA' | awk -F, '{print "update services " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA' | awk -F, '{print $1}' >> $SG
 echo "Done"
 
 # Creating Network_Object Groups
