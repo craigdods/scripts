@@ -53,6 +53,9 @@ echo "update services UDP-10565-10569" >> $final
 echo "create host_plain LHost_155.14.78.6" >> $final
 echo "modify network_objects LHost_155.14.78.6 ipaddr 155.14.78.6" >> $final
 echo "update network_objects LHost_155.14.78.6" >> $final
+echo "create tcp_service g_tcp9990" >> $final
+echo "modify services g_tcp9990 port 9990" >> $final
+echo "update services g_tcp9990" >> $final
 echo "create tcp_service g_tcp7774" >> $final
 echo "modify services g_tcp7774 port 7774" >> $final
 echo "update services g_tcp7774" >> $final
@@ -113,9 +116,9 @@ echo "Done"
 # Creating empty Service groups
 echo " "
 echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA' | awk -F, '{print "create service_group " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA' | awk -F, '{print "update services " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA' | awk -F, '{print $1}' >> $SG
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ' | awk -F, '{print "update services " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ' | awk -F, '{print $1}' >> $SG
 echo "Done"
 
 # Creating Network_Object Groups
