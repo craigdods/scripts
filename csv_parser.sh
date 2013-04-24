@@ -116,9 +116,9 @@ echo "Done"
 # Creating empty Service groups
 echo " "
 echo "parsing and creating EMPTY Service Groups - You will have to populate these on your own"
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ' | awk -F, '{print "create service_group " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ' | awk -F, '{print "update services " $1}' >> $final
-grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ' | awk -F, '{print $1}' >> $SG
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ\|HP' | awk -F, '{print "create service_group " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ\|HP' | awk -F, '{print "update services " $1}' >> $final
+grep -v $bad_grep $input_file | grep group | grep 'sg-\|Gem\|printing_group\|Port\|Ports\|ports\|PORTS\|service\|SERVICE\|ICMP\|icmp\|TCP\|tcp\|UDP\|udp\|TERADATA\|SVC\|MQ\|HP' | awk -F, '{print $1}' >> $SG
 echo "Done"
 
 # Creating Network_Object Groups
