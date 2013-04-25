@@ -20,7 +20,7 @@ SpecialHosts=SpecialHosts.txt
 Rules=tmp_rule_holder.txt
 
 #Add known bad objects/services here
-bad_grep="HackaTack\|MSN\|CP_[^0-9][^S]\|Kerberos\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
+bad_grep="HackaTack\|MSN\|Kerberos\|NO.,NAME,SOURCE,DESTINATION\|HP[[:space:]]network\|ws-ext-pacer-1.7\|ws-ext-pacer-1.18\|ws-ext-pacer-1.22\|ws-ext-pacer-1.28\|ws-domaincontroller-78.182\|grp-eds"
 
 #apl_155.130.0.0-155.130.135.211\|apl_155.130.135.213-155.130.255.255\
 
