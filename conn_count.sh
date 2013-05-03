@@ -4,7 +4,7 @@
 # Using SecureXL connection table vs general connections table to minimize impact on live devices. It is also significantly quicker to poll.
 
 pause(){
-  local m="$@"
+	local m="$@"
 	echo "$m"
 	read -p "Press [Enter] key to continue..." key
 }
@@ -33,15 +33,15 @@ read opt
  case $opt in
 	1) 
 	echo "     #      SRC IP          DST IP"
-	fwaccel conns | awk '{print $1,$3}' | sort | uniq -c | sort -n -r | head -n 50;
+	fwaccel conns | awk '{printf "%-16s %-15s\n", $1,$3}' | sort | uniq -c | sort -n -r | head -n 50;
 	pause;;
 	2) 
 	echo "     #      SRC IP          DST IP    DPort"
-	fwaccel conns | awk '{print $1,$3,$4}' | sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk '{printf "%-16s %-15s %-10s\n", $1,$3,$4}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	3) 
 	echo "     #      SRC IP          DST IP    SPort"
-	fwaccel conns | awk '{print $1,$3,$2}' | sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk '{printf "%-16s %-15s %-10s\n", $1,$3,$2}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	4) 
 	echo "     #      SRC IP"
