@@ -36,12 +36,12 @@ read opt
 	fwaccel conns | awk '{printf "%-16s %-15s\n", $1,$3}' | sort | uniq -c | sort -n -r | head -n 50;
 	pause;;
 	2) 
-	echo "     #      SRC IP          DST IP    DPort"
-	fwaccel conns | awk '{printf "%-16s %-15s %-10s\n", $1,$3,$4}' | sort | uniq -c | sort -n -r | head -n 50
+	echo "     #      SRC IP          DST IP       DPort"
+	fwaccel conns | awk '{printf "%-16s %-16s %-10s\n", $1,$3,$4}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	3) 
-	echo "     #      SRC IP          DST IP    SPort"
-	fwaccel conns | awk '{printf "%-16s %-15s %-10s\n", $1,$3,$2}' | sort | uniq -c | sort -n -r | head -n 50
+	echo "     #      SRC IP          DST IP       SPort"
+	fwaccel conns | awk '{printf "%-16s %-16s %+10s\n", $1,$3,$2}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	4) 
 	echo "     #      SRC IP"
