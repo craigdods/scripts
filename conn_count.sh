@@ -26,7 +26,7 @@ echo "3.  Display the top 50 Source/Destination combos with identical Source Por
 echo "4.  Display the top 50 Sources"
 echo "5.  Display the top 50 Destinations"
 echo "6.  Display the top 50 Source/Destination combo on a Custom Destination Port"
-echo "6.  Display the top 50 Source/Destination combo on a Custom Source Port"
+echo "7.  Display the top 50 Source/Destination combo on a Custom Source Port"
 echo "8.  Display the top 50 Sources on a Custom Destination Port"
 echo "9.  Display the top 50 Destinations on a Custom Destination Port"
 echo "10. Display the top 50 Sources on a Custom Source Port"
