@@ -14,7 +14,7 @@ clear
 while :
 do
 clear
-echo "Hello, Welcome to the Checkpoint Top Talkers display utility"
+echo "Hello, Welcome to the Checkpoint Top Talkers display utility by Craig Dods"
 echo "-----------------------------------------------"
 echo "	     M A I N - M E N U"
 echo "-----------------------------------------------"
