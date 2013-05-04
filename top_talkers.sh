@@ -69,7 +69,7 @@ read opt
 	read sport;
 	echo ""
 	echo "     #      SRC IP       DST IP on SPORT" $sport
-	fwaccel conns | awk -v DPT=$sport '$4==DPT{print}' | awk '{printf "%-16s %-15s\n", $1,$3}' | sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk -v DPT=$sport '$2==DPT{print}' | awk '{printf "%-16s %-15s\n", $1,$3}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	8) 
 	echo "Please enter the specific Destination Port you wish to filter for:  "
@@ -90,14 +90,14 @@ read opt
 	read sport;
 	echo ""
 	echo "     #  SRC IP on SPORT" $sport
-	fwaccel conns | awk -v DPT=$sport '$4==DPT{print}' | awk '{printf "%-16s\n", $1}' | sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk -v DPT=$sport '$2==DPT{print}' | awk '{printf "%-16s\n", $1}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	11) 
 	echo "Please enter the specific Source Port you wish to filter for:  "
 	read sport;
 	echo ""
 	echo "     #  DST IP on SPORT" $sport
-	fwaccel conns | awk -v DPT=$sport '$4==DPT{print}' | awk '{printf "%-16s\n", $3}' | sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk -v DPT=$sport '$2==DPT{print}' | awk '{printf "%-16s\n", $3}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 
 	12)
