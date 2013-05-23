@@ -2,7 +2,7 @@
 # Written by Craig Dods
 # Last Edit on 04/08/2013
 
-input_file=usplsapls007_041613_scrubbed.csv
+input_file=usplsapld010_05-14-13_scrubbed.csv
 
 #echo "Hello, please enter the correct CSV file you'd like to parse:"
 #echo " "
@@ -108,6 +108,7 @@ s/INAT_172.17.220.189/DUMMY_HOST_REMOVE/g;
 s/ext_HP network - removed/DUMMY_HOST_REMOVE/g;
 s/GLOBALfirewall/DUMMY_HOST_REMOVE/g;
 s/aplp001_cluster/DUMMY_HOST_REMOVE/g;
+s/HP Networks - removed/DUMMY_HOST_REMOVE/g;
 s/echo-dest-unreachabe/dest-unreach/g;
 s/echo-time-exceed/time-exceeded/g;
 s/ext_net_60.90.128.0_26/Ext_net_60.90.128.0_26/g;
@@ -119,7 +120,9 @@ s/APL_155.14.78.27/apl_155.14.78.27/g;
 s/APL_155.14.78.69/apl_155.14.78.69/g;
 s/APL_155.14.64.68/apl_155.14.64.68/g;
 s/APL_155.14.64.78/apl_155.14.64.78/g;
+s/network_objects:usplsapld010/network_objects:DUMMY_HOST_REMOVE/g;
 s/gssh/ssh/g;
+s/gtraceroute/traceroute/g;
 s/MAV_servers/MAV_Servers/g;
 s/APL_172.17.71.105/Apl_172.17.71.105/g;
 s/APL_172.17.71.106/Apl_172.17.71.106/g;
@@ -148,19 +151,28 @@ s/apl_net_192.168.155.16_31/Apl_net_192.168.155.16_31/g;
 s/apl_eds_tng_srvr_net/Apl_eds_tng_srvr_net/g;
 s/net_155.14.64.0_24/Net_155.14.64.0_24/g;
 s/apl_as400_nets/Apl_as400_nets/g;
+s/gntp-tcp/ntp-tcp/g;
+s/gntp-udp/ntp-udp/g;
+s/\<Apl_172.17.68.11\>/apl_172.17.68.11/g;
+s/\<WAS_Migrations_servers\>/WAS_Migrations_Servers/g;
+s/\<SUN_TEMP_IP_BACKUP\>/SUN_TEMP_IP_Backup/g;
+s/\<APL_172.17.66.68\>/apl_172.17.66.68/g;
 s/apl_155.14.64.231/Apl_155.14.64.231/g;
 s/gsnmp-trap/snmp-trap/g;
 s/apl_155.14.94.221/APL_155.14.94.221/g;
 s/wct_216.117.102.231/WCT_216.117.102.231/g;
 s/Codelab_209.104.252.243/codelab_209.104.252.243/g;
-s/apl_172.17.68.1/Apl_172.17.68.1/g;
+s/\<apl_172.17.68.1\>/Apl_172.17.68.1/g;
+s/\<Apl_155.14.77.36\>/apl_155.14.77.36/g;
 s/Apl_172.17.68.12/apl_172.17.68.12/g;
 s/AV_Clients/AV_CLIENTS/g;
 s/NOL_TIVOLI_CANDLE_DESt/NOL_TIVOLI_CANDLE_DEST/g;
 s/\<gdomain-udp\>/domain-udp/g;
+s/\<APL_172.17.68.9\>/apl_172.17.68.9/g;
 s/\<NET_192.168.154.0_27\>/Net_192.168.154.0_27/g;
 s/\<NET_192.168.154.64_27\>/Net_192.168.154.64_27/g;
 s/\<APL_NET_192.168.154.0_25\>/apl_net_192.168.154.0_25/g;
+s/\<net_155.14.0.0_16\>/Net_155.14.0.0_16/g
 s/\<NET_192.168.154.32_27\>/Net_192.168.154.32_27/g' >> $final_rules 
 
 # Here is where we do the automated cleanup to reduce manual effort:
