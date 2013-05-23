@@ -47,18 +47,77 @@ echo "update network_objects APL_VOIP_Dom" >> $final
 echo "create tcp_service TCP-10565-10569" >> $final
 echo "modify services TCP-10565-10569 port 10565-10569" >> $final
 echo "update services TCP-10565-10569" >> $final
+
+echo "create network g_eds_130.175.190.0" >> $final
+echo "modify network_objects g_eds_130.175.190.0 ipaddr 172.17.231.111" >> $final
+echo "modify network_objects g_eds_130.175.190.0 netmask 255.255.255.0" >> $final
+echo "update network_objects g_eds_130.175.190.0" >> $final
+
+echo "create network aplnet_net_infosys_172.25.66.0_25" >> $final
+echo "modify network_objects aplnet_net_infosys_172.25.66.0_25 ipaddr 172.25.66.0" >> $final
+echo "modify network_objects aplnet_net_infosys_172.25.66.0_25 netmask 255.255.255.128" >> $final
+echo "update network_objects aplnet_net_infosys_172.25.66.0_25" >> $final
+
+echo "create tcp_service Tcp_1389" >> $final
+echo "modify services Tcp_1389 port 1389" >> $final
+echo "update services Tcp_1389" >> $final
+
+echo "create tcp_service TCP-1510" >> $final
+echo "modify services TCP-1510 port 1510" >> $final
+echo "update services TCP-1510" >> $final
+
+echo "create tcp_service Tcp_1520" >> $final
+echo "modify services Tcp_1520 port 1520" >> $final
+echo "update services Tcp_1520" >> $final
+
+echo "create tcp_service tcp61614" >> $final
+echo "modify services tcp61614 port 61614" >> $final
+echo "update services tcp61614" >> $final
+
 echo "create udp_service UDP-10565-10569" >> $final
 echo "modify services UDP-10565-10569 port 10565-10569" >> $final
 echo "update services UDP-10565-10569" >> $final
+
+echo "create host_plain Apl_155.14.147.11" >> $final
+echo "modify network_objects Apl_155.14.147.11 ipaddr 155.14.147.11" >> $final
+echo "update network_objects Apl_155.14.147.11" >> $final
+
+echo "create host_plain NEC_172.17.68.58" >> $final
+echo "modify network_objects NEC_172.17.68.58 ipaddr 172.17.68.58" >> $final
+echo "update network_objects NEC_172.17.68.58" >> $final
+
+echo "create host_plain NEC_172.17.66.78" >> $final
+echo "modify network_objects NEC_172.17.66.78 ipaddr 172.17.66.78" >> $final
+echo "update network_objects NEC_172.17.66.78" >> $final
+
+echo "create host_plain NEC_172.17.66.128" >> $final
+echo "modify network_objects NEC_172.17.66.128 ipaddr 172.17.66.128" >> $final
+echo "update network_objects NEC_172.17.66.128" >> $final
+
+echo "create host_plain IBM_172.17.231.110" >> $final
+echo "modify network_objects IBM_172.17.231.110 ipaddr 172.17.231.110" >> $final
+echo "update network_objects IBM_172.17.231.110" >> $final
+
+echo "create host_plain IBM_172.17.231.111" >> $final
+echo "modify network_objects IBM_172.17.231.111 ipaddr 172.17.231.111" >> $final
+echo "update network_objects IBM_172.17.231.111" >> $final
+
 echo "create host_plain LHost_155.14.78.6" >> $final
 echo "modify network_objects LHost_155.14.78.6 ipaddr 155.14.78.6" >> $final
 echo "update network_objects LHost_155.14.78.6" >> $final
+
+echo "create host_plain LHost_155.14.125.147" >> $final
+echo "modify network_objects LHost_155.14.125.147 ipaddr 155.14.125.147" >> $final
+echo "update network_objects LHost_155.14.125.147" >> $final
+
 echo "create tcp_service g_tcp9990" >> $final
 echo "modify services g_tcp9990 port 9990" >> $final
 echo "update services g_tcp9990" >> $final
+
 echo "create tcp_service g_tcp7774" >> $final
 echo "modify services g_tcp7774 port 7774" >> $final
 echo "update services g_tcp7774" >> $final
+
 echo "create udp_service g_udp6665" >> $final
 echo "modify services g_udp6665 port 6665" >> $final
 echo "update services g_udp6665" >> $final
