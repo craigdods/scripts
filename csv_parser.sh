@@ -58,6 +58,11 @@ echo "modify network_objects aplnet_net_infosys_172.25.66.0_25 ipaddr 172.25.66.
 echo "modify network_objects aplnet_net_infosys_172.25.66.0_25 netmask 255.255.255.128" >> $final
 echo "update network_objects aplnet_net_infosys_172.25.66.0_25" >> $final
 
+echo "create network apl_172.25.14.16_28" >> $final
+echo "modify network_objects apl_172.25.14.16_28 ipaddr 172.25.14.16" >> $final
+echo "modify network_objects apl_172.25.14.16_28 netmask 255.255.255.224" >> $final
+echo "update network_objects apl_172.25.14.16_28" >> $final
+
 echo "create tcp_service Tcp_1389" >> $final
 echo "modify services Tcp_1389 port 1389" >> $final
 echo "update services Tcp_1389" >> $final
@@ -70,6 +75,18 @@ echo "create tcp_service Tcp_1520" >> $final
 echo "modify services Tcp_1520 port 1520" >> $final
 echo "update services Tcp_1520" >> $final
 
+echo "create tcp_service TCP-2389" >> $final
+echo "modify services TCP-2389 port 2389" >> $final
+echo "update services TCP-2389" >> $final
+
+echo "create tcp_service TCP-5575" >> $final
+echo "modify services TCP-5575 port 5575" >> $final
+echo "update services TCP-5575" >> $final
+
+echo "create tcp_service Tcp_5912" >> $final
+echo "modify services Tcp_5912 port 5912" >> $final
+echo "update services Tcp_5912" >> $final
+
 echo "create tcp_service tcp61614" >> $final
 echo "modify services tcp61614 port 61614" >> $final
 echo "update services tcp61614" >> $final
@@ -77,6 +94,22 @@ echo "update services tcp61614" >> $final
 echo "create udp_service UDP-10565-10569" >> $final
 echo "modify services UDP-10565-10569 port 10565-10569" >> $final
 echo "update services UDP-10565-10569" >> $final
+
+echo "create host_plain apl_dev_172.17.66.38" >> $final
+echo "modify network_objects apl_dev_172.17.66.38 ipaddr 172.17.66.38" >> $final
+echo "update network_objects apl_dev_172.17.66.38" >> $final
+
+echo "create host_plain APL_172.17.68.60" >> $final
+echo "modify network_objects APL_172.17.68.60 ipaddr 172.17.68.60" >> $final
+echo "update network_objects APL_172.17.68.60" >> $final
+
+echo "create host_plain APL_172.17.68.63" >> $final
+echo "modify network_objects APL_172.17.68.63 ipaddr 172.17.68.63" >> $final
+echo "update network_objects APL_172.17.68.63" >> $final
+
+echo "create host_plain host_172.17.68.106" >> $final
+echo "modify network_objects host_172.17.68.106 ipaddr 172.17.68.106" >> $final
+echo "update network_objects host_172.17.68.106" >> $final
 
 echo "create host_plain Apl_155.14.147.11" >> $final
 echo "modify network_objects Apl_155.14.147.11 ipaddr 155.14.147.11" >> $final
