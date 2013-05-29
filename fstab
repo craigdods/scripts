@@ -1,0 +1,8 @@
+# NOTE: If your BOOT partition is ReiserFS, add the notail option to opts.
+/dev/sda1  	/boot		ext2		noatime,defaults			1 2
+/dev/sda2		/		ext4		noatime,defaults,discard		0 1
+/dev/sda3		/home		ext4		noatime,defaults,discard		0 2
+tmpfs			/var/tmp/portage	tmpfs	size=7G					0 0
+/dev/md127		/mnt/RAID	ext4		noatime,defaults			0 2
+/dev/sdd1		/mnt/backup	ext4		noatime,defaults			0 2
+/dev/sde1		/media/WD_MY_BOOK ext4		noatime,defaults			0 2
