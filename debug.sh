@@ -13,14 +13,14 @@
 # YOU MUST make sure any processes which may have been spawned are killed manually
 # Using ps aux|grep kdebug etc to find processes is the easiest way of doing so.
 #
-#. /etc/profile.d/CP.sh
+. /etc/profile.d/CP.sh
 #Some versions of IPSO require this shell instead:
-/opt/CPsuite-R71/svn/tmp/.CPprofile.sh
+#/opt/CPsuite-R71/svn/tmp/.CPprofile.sh
 
 # Input the appropriate SR Number here
 srnumber=0
 # Input the correct customer/partner name here (make sure name is between ' ')	
-custname='SunLife'
+custname='Cubist'
 # This dictates the length of time the debugs are collected in seconds
 sleeptime=60
 # This defines whether SecureXL is disabled during debug captures or not.
@@ -94,7 +94,7 @@ tcpdump_req=1
 # Do you need TCPDUMP running on more than one interface?(Server->Client troubleshooting etc)
 # Setting this to 'yes' will give you an additional prompt to collect for an 'internal' interface.
 # 1 is enabled (true) 0 is disabled (false)
-multi_int_tcp=1
+multi_int_tcp=0
 
 # Collection variables 
 # Is a CPINFO required to be generated?
