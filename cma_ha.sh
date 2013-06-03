@@ -23,12 +23,6 @@ if [ -f /opt/devmgmt/etc/cp.cma.hapairs ] ; then
 			echo "Problematic CMA:" $SECONDARY
 			cpmistat -o schema -r mg $SECONDARY | grep 'mgStatusOK\|mgSync'
 			fi
-			# Output of the command looks like:
-			#Problematic CMA: CMA_Test
-			#:mgStatusOK (0)
-			#:mgSyncStatus (Lagging)
-
-
 
 	done </opt/devmgmt/etc/cp.cma.hapairs
 
