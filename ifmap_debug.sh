@@ -78,11 +78,35 @@ read opt
 	echo "Was unable to collect .pdp m a. automatically. Please collect this manually"
 	fi
 
-	pdp m a > $dbgdir/pdp_m_a.txt &
+	pep_ua=`pep sh u a`
+	if [[ $pep_ua == *daemon* ]]
+	then
+	echo "pep sh u a failed due to unresponsive daemon - attempting to recapture"
+	pep_ua=`pep sh u a`
+	echo $pep_ua > $dbgdir/pep_show_u_a.txt &
+	else
+	echo $pep_ua > $dbgdir/pep_show_u_a.txt &
+	fi
+	if [[ $pep_ua == *daemon* ]]
+	then
+	rm $dbgdir/pep_show_u_a.txt
+	echo "Was unable to collect .pep show u a. automatically. Please collect this manually"
+	fi
 
-	pep sh u a > $dbgdir/pep_show_u_a.txt &
-
-	pdp network reg > $dbgdir/pdp_net_reg.txt &
+	pdp_nr=`pdp network reg`
+	if [[ $pdp_nr == *daemon* ]]
+	then
+	echo "pdp network reg failed due to unresponsive daemon - attempting to recapture"
+	pdp_nr=`pdp network reg`
+	echo $pdp_nr > $dbgdir/pdp_net_reg.txt &
+	else
+	echo $pdp_nr > $dbgdir/pdp_net_reg.txt &
+	fi
+	if [[ $pdp_nr == *daemon* ]]
+	then
+	rm $dbgdir/pdp_net_reg.txt
+	echo "Was unable to collect .pdp network reg. automatically. Please collect this manually"
+	fi
 
 	pep show net reg > $dbgdir/pep_net_reg.txt &
 
