@@ -16,6 +16,7 @@ time=`date +'%m%d%H%M%S'`
 dbgdir=/var/tmp/$time\_$host\_debug
 msgs=$dbgdir\/message_files
 elgs=$dbgdir\/elgs
+filename=/var/tmp/$time\_$host\_debugs.tgz
 
 mkdir $dbgdir
 mkdir $msgs
@@ -33,8 +34,9 @@ echo "-----------------------------------------------"
 echo ""
 echo "1.  Gather Debugs"
 echo "2.  *****Disable all debugs and collect the *.elg's - DON'T FORGET!*****"
-echo "3.  Print original instructions from Whatcha"
-echo "4.  Exit"
+echo "3.  Print original debug instructions from Whatcha"
+echo "4.  Finished? Use this option to compress the debugs into a single .tgz"
+echo "5.  Exit"
 
 echo -n "Please Make A Selection:  "
 
@@ -188,7 +190,18 @@ E: wmccallum@checkpoint.com
 for escalation path information go to http://www.checkpoint.com/services/contact/escalation.html
 "
 	pause;;
+	
 	4)
+	echo "Compressing the debugs into a single tarball"
+		tar -zcf /var/tmp/$time\_$host\_debugs.tgz $dbgdir
+		echo " "
+		echo " "
+		echo "The compressed files are found in"
+		echo "$filename"
+		echo " "
+	pause;;	
+
+	5)
 	exit 1;;
 
  esac
