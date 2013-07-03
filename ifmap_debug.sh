@@ -108,7 +108,20 @@ read opt
 	echo "Was unable to collect .pdp network reg. automatically. Please collect this manually"
 	fi
 
-	pep show net reg > $dbgdir/pep_net_reg.txt &
+	pep_nr=`pep show network reg`
+	if [[ $pep_nr == *daemon* ]]
+	then
+	echo "pep show network reg failed due to unresponsive daemon - attempting to recapture"
+	pep_nr=`pep show network reg`
+	echo $pep_nr > $dbgdir/pep_net_reg.txt &
+	else
+	echo $pep_nr > $dbgdir/pep_net_reg.txt &
+	fi
+	if [[ $pep_nr == *daemon* ]]
+	then
+	rm $dbgdir/pep_net_reg.txt
+	echo "Was unable to collect .pep show network reg. automatically. Please collect this manually"
+	fi
 
 	cpvinfo $FWDIR/lib/libpdplib.so > $dbgdir/libpdp_cpvinfo.txt
 	cpvinfo $FWDIR/bin/pdpd > $dbgdir/pdpd_cpvinfo.txt
