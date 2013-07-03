@@ -7,7 +7,7 @@
 
 pause(){
   local m="$@"
-  echo "$m"
+	echo "$m"
 	read -p "Press [Enter] key to continue..." key
 }
 
@@ -46,11 +46,46 @@ read opt
 	netstat -na | grep ESTABLI | grep 52.100.254. > $dbgdir/netstat_na.txt &
 	$FWDIR/log/tabstat > $dbgdir/tabstat_output.txt &
 	pdp ifmap connect all
-	pdp if st > $dbgdir/pdp_if_stat.txt &
+
+	if_stat=`pdp if stat`
+	if [[ $if_stat == *daemon* ]]
+	then
+	echo "if_stat failed due to unresponsive daemon - attempting to recapture"
+	if_stat=`pdp if stat`
+	echo $if_stat > $dbgdir/pdp_if_stat.txt &
+	else
+	echo $if_stat > $dbgdir/pdp_if_stat.txt &
+	fi
+	if [[ $if_stat == *daemon* ]]
+	then
+	# Collect the garbage
+	rm $dbgdir/pdp_if_stat.txt
+	echo "Was unable to collect .pdp if stat. automatically. Please collect this manually"
+	fi
+
+	m_a=`pdp m a`
+	if [[ $m_a == *daemon* ]]
+	then
+	echo "pdp m a failed due to unresponsive daemon - attempting to recapture"
+	m_a=`pdp m a`
+	echo $m_a > $dbgdir/pdp_m_a.txt &
+	else
+	echo $m_a > $dbgdir/pdp_m_a.txt &
+	fi
+	if [[ $m_a == *daemon* ]]
+	then
+	rm $dbgdir/pdp_m_a.txt
+	echo "Was unable to collect .pdp m a. automatically. Please collect this manually"
+	fi
+
 	pdp m a > $dbgdir/pdp_m_a.txt &
+
 	pep sh u a > $dbgdir/pep_show_u_a.txt &
+
 	pdp network reg > $dbgdir/pdp_net_reg.txt &
+
 	pep show net reg > $dbgdir/pep_net_reg.txt &
+
 	cpvinfo $FWDIR/lib/libpdplib.so > $dbgdir/libpdp_cpvinfo.txt
 	cpvinfo $FWDIR/bin/pdpd > $dbgdir/pdpd_cpvinfo.txt
 	cpvinfo $FWDIR/bin/pep > $dbgdir/pep_cpvinfo.txt
