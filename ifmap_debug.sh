@@ -130,6 +130,9 @@ read opt
 	pdp d set all all
 	pdp debug rotate
 	echo "Logs are collected and debugs are enabled - please remember to turn them off before you leave!"
+	echo ""
+	echo "If you've noticed multiple daemon not responding errors, please verify debugs are running correctly before proceeding."
+	echo "See Whatcha's instructions for details on how run them manually."
 	pause;;
 	2) 
 	echo "Disabling all debugs and collecting ELGs"
