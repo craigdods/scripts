@@ -31,7 +31,9 @@ echo "8.  Display the top 50 Sources on a Custom Destination Port"
 echo "9.  Display the top 50 Destinations on a Custom Destination Port"
 echo "10. Display the top 50 Sources on a Custom Source Port"
 echo "11. Display the top 50 Destinations on a Custom Source Port"
-echo "12. Exit"
+echo "12. Display the top 50 Destination Ports"
+echo "13. Display the top 50 Source Ports"
+echo "14. Exit"
 
 echo -n "Please Make A Selection:  "
 
@@ -99,8 +101,22 @@ read opt
 	echo "     #  DST IP on SPORT" $sport
 	fwaccel conns | awk -v DPT=$sport '$2==DPT{print}' | awk '{printf "%-16s\n", $3}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
+	12) 
+	echo "Please enter the specific Destination Port you wish to filter for:  "
+	read sport;
+	echo ""
+	echo "     #  DST IP on SPORT" $dport
+	fwaccel conns | awk -v DPT=$dport '$4==DPT{print}' | awk '{print $4}' | sort | uniq -c | sort -n -r | head -n 50
+	pause;;
+	13) 
+	echo "Please enter the specific Source Port you wish to filter for:  "
+	read sport;
+	echo ""
+	echo "     #  DST IP on SPORT" $sport
+	fwaccel conns | awk -v DPT=$sport '$2==DPT{print}' | awk '{print $2}' | sort | uniq -c | sort -n -r | head -n 50
+	pause;;
 
-	12)
+	14)
 	exit 1;;
 
  esac
