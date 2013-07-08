@@ -33,8 +33,8 @@ echo "10. Display the top 50 Sources on a Custom Source Port"
 echo "11. Display the top 50 Destinations on a Custom Source Port"
 echo "12. Display the top 20 Destination Ports"
 echo "13. Display the top 20 Source Ports"
-echo "14. Display Connections From A Specific Host"
-echo "15. Display Connections To A Specific Host"
+echo "14. Display Connections From A Specific Host (large list)"
+echo "15. Display Connections To A Specific Host (large list)""
 echo "16. Exit"
 
 echo -n "Please Make A Selection:  "
@@ -126,8 +126,12 @@ read opt
 	read host;
 	echo ""
 	fwaccel conns -s
+	echo "Number of entries sourced from this host"
+	fwaccel conns | awk -v DPT=$host '$3==DPT{print}' | wc -l
 	echo "     #  Host" $host
-	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | sort -n -r 
+	echo "Number of entries sourced from this host"
+	fwaccel conns | awk -v DPT=$host '$3==DPT{print}' | wc -l
+	fwaccel conns | awk -v DPT=$host '$3==DPT{print}'| sort | sort -n -r 
 	pause;;
 	16)
 	exit 1;;
