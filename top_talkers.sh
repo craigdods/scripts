@@ -33,6 +33,7 @@ echo "10. Display the top 50 Sources on a Custom Source Port"
 echo "11. Display the top 50 Destinations on a Custom Source Port"
 echo "12. Display the top 20 Destination Ports"
 echo "13. Display the top 20 Source Ports"
+echo "14. Display Connections From A Specific Host"
 echo "16. Exit"
 
 echo -n "Please Make A Selection:  "
@@ -112,20 +113,12 @@ read opt
 	fwaccel conns | awk '{print $2}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	14) 
-	echo "Please enter the specific Destination Port you wish to filter for:  "
-	read sport;
+	echo "Please enter the specific Host you wish to filter for as a Source:  "
+	read host;
 	echo ""
-	echo "     #  DPORT" $dport
-	fwaccel conns | awk -v DPT=$dport '$4==DPT{print}' | awk '{print $4}' | sort | uniq -c | sort -n -r | head -n 50
+	echo "     #  DPORT" $host
+	fwaccel conns | awk -v DPT=$host '$1==DPT{print}' | awk '{print $1}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
-	15) 
-	echo "Please enter the specific Source Port you wish to filter for:  "
-	read sport;
-	echo ""
-	echo "     #  SPORT" $sport
-	fwaccel conns | awk -v DPT=$sport '$2==DPT{print}' | awk '{print $2}' | sort | uniq -c | sort -n -r | head -n 50
-	pause;;
-
 	16)
 	exit 1;;
 
