@@ -118,6 +118,8 @@ read opt
 	read host;
 	echo ""
 	fwaccel conns -s
+	echo "Number of entries sourced from this host"
+	fwaccel conns | awk -v DPT=$host '$1==DPT{print}' | wc -l
 	echo "     #  Host" $host
 	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | sort -n -r
 	pause;;
@@ -126,11 +128,8 @@ read opt
 	read host;
 	echo ""
 	fwaccel conns -s
-	echo "Number of entries sourced from this host"
 	fwaccel conns | awk -v DPT=$host '$3==DPT{print}' | wc -l
 	echo "     #  Host" $host
-	echo "Number of entries sourced from this host"
-	fwaccel conns | awk -v DPT=$host '$3==DPT{print}' | wc -l
 	fwaccel conns | awk -v DPT=$host '$3==DPT{print}'| sort | sort -n -r 
 	pause;;
 	16)
