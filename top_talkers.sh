@@ -105,14 +105,14 @@ read opt
 	echo "Please enter the specific Destination Port you wish to filter for:  "
 	read sport;
 	echo ""
-	echo "     #  DST IP on SPORT" $dport
+	echo "     #  DPORT" $dport
 	fwaccel conns | awk -v DPT=$dport '$4==DPT{print}' | awk '{print $4}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 	13) 
 	echo "Please enter the specific Source Port you wish to filter for:  "
 	read sport;
 	echo ""
-	echo "     #  DST IP on SPORT" $sport
+	echo "     #  SPORT" $sport
 	fwaccel conns | awk -v DPT=$sport '$2==DPT{print}' | awk '{print $2}' | sort | uniq -c | sort -n -r | head -n 50
 	pause;;
 
