@@ -119,7 +119,7 @@ read opt
 	echo ""
 	fwaccel conns -s
 	echo "     #  Host" $host
-	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 20
+	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | sort -n -r
 	pause;;
 	15) 
 	echo "Please enter the specific Host you wish to filter for as a Destination:  "
@@ -127,7 +127,7 @@ read opt
 	echo ""
 	fwaccel conns -s
 	echo "     #  Host" $host
-	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 20
+	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | sort -n -r 
 	pause;;
 	16)
 	exit 1;;
