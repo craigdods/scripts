@@ -106,12 +106,12 @@ read opt
 	12) 
 	echo ""
 	echo "     #  DPORT" $dport
-	fwaccel conns | awk '{print $4}' | sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk '{print $4}' | sort | uniq -c | sort -n -r | head -n 20
 	pause;;
 	13) 
 	echo ""
 	echo "     #  SPORT" $sport
-	fwaccel conns | awk '{print $2}' | sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk '{print $2}' | sort | uniq -c | sort -n -r | head -n 20
 	pause;;
 	14) 
 	echo "Please enter the specific Host you wish to filter for as a Source:  "
@@ -119,7 +119,7 @@ read opt
 	echo ""
 	fwaccel conns -s
 	echo "     #  Host" $host
-	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 20
 	pause;;
 	15) 
 	echo "Please enter the specific Host you wish to filter for as a Destination:  "
@@ -127,7 +127,7 @@ read opt
 	echo ""
 	fwaccel conns -s
 	echo "     #  Host" $host
-	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 50
+	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 20
 	pause;;
 	16)
 	exit 1;;
