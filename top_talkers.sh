@@ -117,6 +117,7 @@ read opt
 	echo "Please enter the specific Host you wish to filter for as a Source:  "
 	read host;
 	echo ""
+	fwaccel conns -s
 	echo "     #  Host" $host
 	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 50
 	pause;;
@@ -124,6 +125,7 @@ read opt
 	echo "Please enter the specific Host you wish to filter for as a Destination:  "
 	read host;
 	echo ""
+	fwaccel conns -s
 	echo "     #  Host" $host
 	fwaccel conns | awk -v DPT=$host '$1==DPT{print}'| sort | uniq -c | sort -n -r | head -n 50
 	pause;;
