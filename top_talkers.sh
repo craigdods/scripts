@@ -34,7 +34,7 @@ echo "11. Display the top 50 Destinations on a Custom Source Port"
 echo "12. Display the top 20 Destination Ports"
 echo "13. Display the top 20 Source Ports"
 echo "14. Display Connections From A Specific Host (large list)"
-echo "15. Display Connections To A Specific Host (large list)""
+echo "15. Display Connections To A Specific Host (large list)"
 echo "16. Exit"
 
 echo -n "Please Make A Selection:  "
