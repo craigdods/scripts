@@ -1,11 +1,3 @@
-*/5 * * * * /home/budsell/dupont_script/pdp_process_dupont-rale-us-hafw1.sh
-*/5 * * * * /home/budsell/dupont_script/pdp_process_dupont-sbry-us-hafw2.sh
- 
-12:18:06 PM
-◄
-
-
-[budsell@atl-prd-opsdply-01 ~]$ cat /home/budsell/dupont_script/pdp_process_dupont-rale-us-hafw1.sh
 #!/bin/bash
 source /etc/profile
 
@@ -13,10 +5,11 @@ source /etc/profile
 . /home/budsell/.ssh/agent
 
 BODY=`/usr/bin/ssh admin@129.39.22.86 "netstat -na | grep 52.100.254.25"`
-STATUS=`echo $BODY | grep CLOSE_WAIT | wc -l`
+CLOSED_STATUS=`echo $BODY | grep CLOSE_WAIT | wc -l`
+ESTABLISHED_STATUS=`/usr/bin/ssh admin@129.39.22.86 "netstat -na | grep 52.100.254.25|grep -c ESTABLISHED"`
 
-if [ $STATUS -ne 0 ]; then
-echo -e "$BODY \n\n Please create new ticket and investigate immediately. PDP Daemon may need restarted" | mail -s "CRITICAL Dupont - RTP FW1 process failure `date --utc '+%m-%d-%Y %R GMT'`" -c budsell@us.ibm.com,9703010685@vtext.com mss-soc-dmg-ldr@wwpdl.vnet.ibm.com
+if ([[ $ESTABLISHED_STATUS -lt 2 ]] && [[ $CLOSED_STATUS -ne 0 ]]); then
+echo -e "$BODY \n\n Please create new ticket and investigate immediately. PDP Daemon may need restarted" | mail -s "CRITICAL Dupont - Southbury FW2 process failure `date --utc '+%m-%d-%Y %R GMT'`" budsell@us.ibm.com
 else
-echo -e "$BODY" | mail -s "OK Dupont - RTP FW1 `date --utc '+%m-%d-%Y %R GMT'`" budsell@us.ibm.com
+echo -e "$BODY" | mail -s "OK Dupont - Southbury FW2 `date --utc '+%m-%d-%Y %R GMT'`" budsell@us.ibm.com
 fi
