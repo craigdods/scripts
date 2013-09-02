@@ -50,7 +50,7 @@ do
 	cur_time=`date`
 	echo " "
 
-		echo -n $int1 && ethtool -S $int1 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
+		echo -n $int1 && ethtool -S $int1 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba;s/[rx_bytes:]//g;s/nic//g'
 		echo -n $int2 && ethtool -S $int2 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int3 && ethtool -S $int3 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
 		echo -n $int4 && ethtool -S $int4 | grep -e rx_bytes -e tx_bytes | sed ':a;$b;N;s/\n//;ba' | sed 's/[rx_bytes:]//g'
