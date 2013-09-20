@@ -6,6 +6,7 @@
 # DCE-RPC defaults to ms-rpc. If you need to use sun-rpc, modify line 85 'ms-rpc' to 'sun-rpc'
 # Nested Groups/Application-sets within other groups/sets may/maynot work correctly.
 # Predefined Check Point services (MS-SQL) for instance will not carry over.
+#   -Likely to cause commit-check errors
 
 echo "Hello, please enter the correct csv file you'd like to parse:"
 echo " "
