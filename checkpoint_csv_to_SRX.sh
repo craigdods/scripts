@@ -95,16 +95,14 @@ echo "Done"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-#grep -v $bad_grep $input_file | awk -F"[,|]" '{if ($2=="Tcp" || $2=="tcp") print "create tcp_service",$1}' >> $final
+line_count=`wc -l $final | awk '{print $1}'`
+echo " "
+echo "Cleaning up..."
+echo " "
+echo "Finished - you have created" $line_count "JunOS set commands"
+echo " "
+echo "The commands are found in" $final
+echo "Special cases that need manual intervention are found in" $SpecialHosts
+echo " "
+echo "Goodbye..."
+echo " " 
