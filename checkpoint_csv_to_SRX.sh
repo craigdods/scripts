@@ -63,7 +63,7 @@ s/\<128\.0\.0\.0\>/\/1/g;
 
 # Create Address Book Entries
 echo " "
-echo "parsing and creating Address-Book Entries..."
+echo "Parsing and creating Address-Book Entries..."
 # Creating hosts/networks (non-range)
 awk -F "[,|]" '{if ($2=="host" || $2=="net") print "set security address-book global address",$1,$3$4}' $temp_file >> $final
 # Creating range-address
@@ -71,14 +71,14 @@ awk -F "[,|]" '{if ($2=="range") print "set security address-book global address
 echo "Done"
 
 echo " "
-echo "parsing and creating Address-Sets..."
+echo "Parsing and creating Address-Sets..."
 # Creating Address-Sets
 awk -F "[,|]" '{if ($2=="group") print "set security address-book global address-set",$1,"address",$3}' $temp_file >> $final
 echo "Done"
 
 
 echo " "
-echo "parsing and creating Applications..."
+echo "Parsing and creating Applications..."
 # Creating TCP applications
 awk -F "[,|]" '{if ($2=="tcp") print "set applications application",$1,"protocol tcp destination-port",$3}' $temp_file >> $final
 # Creating UDP applications
@@ -88,7 +88,7 @@ awk -F "[,|]" '{if ($2=="dcerpc") print "set applications application",$1,"uuid"
 echo "Done"
 
 echo " "
-echo "parsing and creating Application-Sets..."
+echo "Parsing and creating Application-Sets..."
 # Creating S-Sets
 awk -F "[,|]" '{if ($2=="srvgroup") print "set applications application-set",$1,"application",$3}' $temp_file >> $final
 echo "Done"
@@ -98,11 +98,11 @@ echo "Done"
 line_count=`wc -l $final | awk '{print $1}'`
 echo " "
 echo "Cleaning up..."
+rm $temp_file
 echo " "
 echo "Finished - you have created" $line_count "JunOS set commands"
 echo " "
 echo "The commands are found in" $final
-echo "Special cases that need manual intervention are found in" $SpecialHosts
 echo " "
 echo "Goodbye..."
 echo " " 
