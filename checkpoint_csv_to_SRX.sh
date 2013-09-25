@@ -1,10 +1,10 @@
 #!/bin/bash
 # Written by Craig Dods
-# Last Edit on 09/25/2013
+# Last Edit on 09/19/2013
 # This will attempt to convert Check Point objects, exported from odumper, to Juniper SRX configuration
 ###########################################################################################################################
 # Things to note:													  #
-# DCE-RPC defaults to ms-rpc. If you need to use sun-rpc, modify line 85 'ms-rpc' to 'sun-rpc'				  #
+# DCE-RPC defaults to ms-rpc. If you need to use sun-rpc, modify line 89 'ms-rpc' to 'sun-rpc'				  #
 # Predefined Check Point services (MS-SQL) for instance will not carry over, and are likely to create commit-check errors #
 # Check Point Objects are created as dumb hosts with their mgmt IPs							  #
 ###########################################################################################################################
@@ -20,7 +20,6 @@ time=$(date +'%d%m%y_%H%M')
 temp_file="temp_${input_file}.txt"
 final="${time}_Parsed_CSV.config"
 
-# Cleanup from previous runs
 touch $final
 
 cp $input_file $temp_file
@@ -61,15 +60,13 @@ s/\<192\.0\.0\.0\>/\/2/g;
 s/\<128\.0\.0\.0\>/\/1/g;
 ' $temp_file
 
-
-
 # Create Address Book Entries
 echo " "
 echo "Parsing and creating Address-Book Entries..."
 # Creating hosts/networks (non-range)
 awk -F "[,|]" '{if ($2=="host" || $2=="net") print "set security address-book global address",$1,$3$4}' $temp_file >> $final
 # Creating Dumb CP Objects
-awk -F "[,|]" '{if ($2=="cpgw" || $2=="cluster" || $2=="member" || $2=="idevice" || $2=="interface" || $2=="ss" || $2=="interface") print "set security address-book global address",$1,$3"/32"}' $temp_file >> $final
+awk -F "[,|]" '{if ($2=="cpgw" || $2=="cluster"|| $2=="plaingw" || $2=="member" || $2=="idevice" || $2=="interface" || $2=="ss" || $2=="interface") print "set security address-book global address",$1,$3"/32"}' $temp_file >> $final
 # Creating range-address
 awk -F "[,|]" '{if ($2=="range") print "set security address-book global address",$1,"range-address",$3,"to",$4}' $temp_file >> $final
 echo "Done"
