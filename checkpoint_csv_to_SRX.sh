@@ -1,14 +1,13 @@
 #!/bin/bash
 # Written by Craig Dods
-# Last Edit on 09/19/2013
+# Last Edit on 09/25/2013
 # This will attempt to convert Check Point objects, exported from odumper, to Juniper SRX configuration
-#
-# Things to note:
-# DCE-RPC defaults to ms-rpc. If you need to use sun-rpc, modify line 85 'ms-rpc' to 'sun-rpc'
-# Nested Groups/Application-sets within other groups/sets may/maynot work correctly.
-# Predefined Check Point services (MS-SQL) for instance will not carry over.
-#   -Likely to cause commit-check errors
-# Check Point Objects are created as dumb hosts with their mgmt IPs
+###########################################################################################################################
+# Things to note:													  #
+# DCE-RPC defaults to ms-rpc. If you need to use sun-rpc, modify line 85 'ms-rpc' to 'sun-rpc'				  #
+# Predefined Check Point services (MS-SQL) for instance will not carry over, and are likely to create commit-check errors #
+# Check Point Objects are created as dumb hosts with their mgmt IPs							  #
+###########################################################################################################################
 
 echo "Hello, please enter the correct csv file you'd like to parse:"
 echo " "
@@ -17,9 +16,9 @@ read -s input_file
 echo " "
 echo "Thank you"
 echo " "
-time=`date +'%d%m%y_%H%M'`
-temp_file=temp\_$input_file.txt
-final=$time\_Parsed_CSV.config
+time=$(date +'%d%m%y_%H%M')
+temp_file="temp_${input_file}.txt"
+final="${time}_Parsed_CSV.config"
 
 # Cleanup from previous runs
 touch $final
@@ -62,6 +61,8 @@ s/\<192\.0\.0\.0\>/\/2/g;
 s/\<128\.0\.0\.0\>/\/1/g;
 ' $temp_file
 
+
+
 # Create Address Book Entries
 echo " "
 echo "Parsing and creating Address-Book Entries..."
@@ -76,9 +77,8 @@ echo "Done"
 echo " "
 echo "Parsing and creating Address-Sets..."
 # Creating Address-Sets
-awk -F "[,|]" '{if ($2=="group") print "set security address-book global address-set",$1,"address",$3}' $temp_file >> $final
+awk -F',' '$2=="group" {if (NR==FNR) gh[$1]; else print "set security address-book global address-set", $1, "address" ($3 in gh ? "-set" : ""), $3}' "$temp_file" "$temp_file" >>group_test.txt $temp_file >> $final
 echo "Done"
-
 
 echo " "
 echo "Parsing and creating Applications..."
@@ -92,8 +92,8 @@ echo "Done"
 
 echo " "
 echo "Parsing and creating Application-Sets..."
-# Creating S-Sets
-awk -F "[,|]" '{if ($2=="srvgroup") print "set applications application-set",$1,"application",$3}' $temp_file >> $final
+# Creating Address-Sets
+awk -F',' '$2=="srvgroup" {if (NR==FNR) ah[$1]; else print "set applications application-set", $1, "application" ($3 in ah ? "-set" : ""), $3}' "$temp_file" "$temp_file" >> $final
 echo "Done"
 
 #Uniq'ing 
