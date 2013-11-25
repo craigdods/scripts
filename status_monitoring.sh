@@ -8,6 +8,9 @@ CONN_TABLE_LIMIT=75000
 CONN_TABLE_LIMIT_ACTUAL=$(fw tab -t connections | head -n 3 | grep "limit" | awk -F, '{print $9}' | sed 's/\ limit //g')
 ####### 
 
+###### CLEAR HUNG PDP SEARCH
+ps aux | grep "pdp i s 1" | grep -v grep | awk '{print $2}' | xargs kill -9 &
+
 ####### Identity Awareness table sizes
 PDP_THRESH=200
 PEP_THRESH=200
@@ -23,6 +26,18 @@ PEP_CLIENT_DB=$(fw tab -t pep_client_db -s | grep pep | awk '{print $4}')
 PEP_SRC_MAP=$(fw tab -t pep_src_mapping_db -s | grep pep | awk '{print $4}')
 ####### 
 
+####### Cluster Monitoring
+#Determine if Active/Standby
+CPHA_ACTIVE=$(cphaprob stat | grep local | grep Active)
+CPHA_STAT=$(cphaprob stat | grep -i "down\|attention")
+
+####### IFMAP Monitoring (only on primary cluster member)
+#Should equal Connected
+IF_STAT=$(pdp i s | grep Connected | tail -n 1 | awk '{print $4}')
+#Print IF-MAP Manager/Controller IP
+IF_PEER=$(pdp i s | grep Connected | tail -n 1 | awk '{print $2}')
+
+#######
 LOGFILE=/home/admin/ALERT_LOG.txt
 DATE=$(/bin/date)
 #REMOVE AFTER TESTING#######################################
@@ -116,5 +131,33 @@ if [ "$PEP_SRC_MAP" -le "$PEP_THRESH" ]
 		echo $PEP_SRC_MAP >> $LOGFILE
 	fi
 
+#### Monitor Cluster Activity
+#REPORT DOWN STATE
+if [ "$CPHA_STAT" != "" ]
+	then
+		echo $DATE >> $LOGFILE
+		echo "****CLUSTER STATUS DOWN*****" >> $LOGFILE
+		echo "Current CLUSTER STATUS:" >> $LOGFILE
+		echo $CPHA_STAT >> $LOGFILE
+	fi
+
+# RUN CHECKS ONLY ON ACTIVE DEVICE
+if [ "$CPHA_ACTIVE" != "" ]
+	then
+	#GET IF-MAP Connection Status
+	if [ "$IF_STAT" != "Connected" ]
+	then
+		echo $DATE >> $LOGFILE
+		echo "****IF-MAP CONNECTION DOWN  DOWN*****" >> $LOGFILE
+		echo "Current IF-MAP STATUS:" >> $LOGFILE
+		echo $IF_STAT >> $LOGFILE
+	fi
+	#CHECK Netstat for 2 active SSL connections back to Controller/MGR
+		
+	echo "ACTIVE"
+	else
+	#Do nothing
+	:
+	fi
 
 
