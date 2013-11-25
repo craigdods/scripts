@@ -8,8 +8,8 @@ CONN_TABLE_LIMIT=75000
 CONN_TABLE_LIMIT_ACTUAL=$(fw tab -t connections | head -n 3 | grep "limit" | awk -F, '{print $9}' | sed 's/\ limit //g')
 ####### 
 
-###### CLEAR HUNG PDP SEARCH
-ps aux | grep "pdp i s 1" | grep -v grep | awk '{print $2}' | xargs kill -9 &
+###### CLEAR HUNG PDP SEARCH from other scripts
+ps aux | grep "pdp i s 1" | grep -v grep | awk '{print $2}' | xargs kill -9 2>&1 &
 
 ####### Identity Awareness table sizes
 PDP_THRESH=200
@@ -24,7 +24,6 @@ PDP_NET_DB=$(fw tab -t pdp_net_db -s | grep pdp | awk '{print $4}')
 PEP_NET_REG=$(fw tab -t pep_net_reg -s | grep pep | awk '{print $4}')
 PEP_CLIENT_DB=$(fw tab -t pep_client_db -s | grep pep | awk '{print $4}')
 PEP_SRC_MAP=$(fw tab -t pep_src_mapping_db -s | grep pep | awk '{print $4}')
-####### 
 
 ####### Cluster Monitoring
 #Determine if Active/Standby
@@ -36,13 +35,12 @@ CPHA_STAT=$(cphaprob stat | grep -i "down\|attention")
 IF_STAT=$(pdp i s | grep Connected | tail -n 1 | awk '{print $4}')
 #Print IF-MAP Manager/Controller IP
 IF_PEER=$(pdp i s | grep Connected | tail -n 1 | awk '{print $2}')
+#GET Netstat output and verify 2 active connections
+NETSTAT=$(netstat -na | grep $IF_PEER | grep "\:443" | wc -l)
 
-#######
+####### 
 LOGFILE=/home/admin/ALERT_LOG.txt
 DATE=$(/bin/date)
-#REMOVE AFTER TESTING#######################################
-rm $LOGFILE
-############################################################
 touch $LOGFILE
 
 #ALERT FOR CONNECTION TABLE THRESHOLD
@@ -148,13 +146,18 @@ if [ "$CPHA_ACTIVE" != "" ]
 	if [ "$IF_STAT" != "Connected" ]
 	then
 		echo $DATE >> $LOGFILE
-		echo "****IF-MAP CONNECTION DOWN  DOWN*****" >> $LOGFILE
+		echo "****IF-MAP CONNECTION DOWN*****" >> $LOGFILE
 		echo "Current IF-MAP STATUS:" >> $LOGFILE
 		echo $IF_STAT >> $LOGFILE
 	fi
 	#CHECK Netstat for 2 active SSL connections back to Controller/MGR
-		
-	echo "ACTIVE"
+	if [ "$NETSTAT" -ne 2 ]
+	then
+		echo $DATE >> $LOGFILE
+		echo "****IF-MAP CONNECTION ISSUE REPORTED VIA NETSTAT*****" >> $LOGFILE
+		echo "Current connections over 443 to $IF_PEER:" >> $LOGFILE
+		echo $NETSTAT >> $LOGFILE
+	fi
 	else
 	#Do nothing
 	:
