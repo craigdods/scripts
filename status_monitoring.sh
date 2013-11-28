@@ -1,5 +1,6 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
+source /etc/profile.d/CP.sh
 
 ####### Connections table Monitoring
 CONN_TABLE_THRESHOLD=50000
