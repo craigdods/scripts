@@ -178,16 +178,23 @@ if [ "$CPHA_STAT" != "" ]
 		echo "Current CLUSTER STATUS:" 
 		echo $CPHA_STAT 
 	fi
+
 #View previous state and report if changed (Failover)
+# Should print the following:
+#****Cluster state has changed! Possible Failover has occurred!****
+#Previous Cluster Member Status: Standby 
+#Current Cluster Member Status: Active
 if [ "$CPHA_CURRENT" == "$CPHA_LAST" ]
 	then
+	#Do nothing
 		:
 	else
-		echo "Cluster state has changed! Possible Failover has occurred!"
+		echo "****Cluster state has changed! Possible Failover has occurred!****"
 		echo "Previous Cluster Member Status: $CPHA_LAST "
 		echo "Current Cluster Member Status: $CPHA_CURRENT"
+		rm $CXL_FAILOVER_MONITOR
+		cphaprob stat | grep local | awk '{print $5}' > $CXL_FAILOVER_MONITOR
 	fi
-
 
 #View current cluster state (Active vs Standby)
 #CPHA_CURRENT=$(cphaprob stat | grep local | awk '{print $5}')
