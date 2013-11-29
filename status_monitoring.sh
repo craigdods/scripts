@@ -43,7 +43,7 @@ if [ ! -f "$POL_INST" ]
 
 if [ ! -f "$DC_MONITOR" ]
 	then
-		pdp i s | grep 443 | awk '{print $7}' > $DC_MONITOR
+		pdp i s | grep 443 | awk '{print $5,$6,$7,$8}' > $DC_MONITOR
 	fi
 #####################   
 
@@ -88,6 +88,9 @@ IF_STAT=$(pdp i s | grep Connected | tail -n 1 | awk '{print $4}')
 IF_PEER=$(pdp i s | grep Connected | tail -n 1 | awk '{print $2}')
 #GET Netstat output and verify 2 active connections
 NETSTAT=$(netstat -na | grep $IF_PEER | grep "\:443" | wc -l)
+#IFMAP Connection State (All devices)
+IFMAP_CURRENT=$(pdp i s | grep 443 | awk '{print $5,$6,$7,$8}')
+IFMAP_LAST=$(cat $DC_MONITOR)
 #####################   
 
 ####### Policy Installation Monitoring
@@ -206,9 +209,8 @@ if [ "$CPHA_CURRENT" == "$CPHA_LAST" ]
 		cphaprob stat | grep local | awk '{print $5}' > $CXL_FAILOVER_MONITOR
 	fi
 
-#####################   
-#Policy_CURRENT=$(fw stat | grep -v HOST |awk '{print $4}')
-#Policy_LAST=$(cat $POL_INST)
+#####################  
+ 
 ####### Monitor for Policy Installation
 if [ "$Policy_CURRENT" == "$Policy_LAST" ]
 	then
@@ -221,6 +223,23 @@ if [ "$Policy_CURRENT" == "$Policy_LAST" ]
 		rm $POL_INST
 		fw stat | grep -v HOST |awk '{print $3,$4}' > $POL_INST
 	fi
+#####################   
+
+####### Monitor for IF-MAP Disconnect/Connect changes
+#IFMAP_CURRENT=$(pdp i s | grep 443 | awk '{print $5,$6,$7}')
+#IFMAP_LAST=$(cat $DC_MONITOR)
+if [ "$IFMAP_CURRENT" == "$IFMAP_LAST" ]
+	then
+	#Do nothing
+		:
+	else
+		echo "********Possible IF-MAP Disconnect!********"
+		echo "Previous IF-MAP Connection Timestamp (Likely to be NULL if previously Standby): $IFMAP_LAST "
+		echo "Current IF-MAP Connection Timestamp: $IFMAP_CURRENT"
+		rm $DC_MONITOR
+		pdp i s | grep 443 | awk '{print $5,$6,$7,$8}' > $DC_MONITOR
+	fi
+
 #####################   
 
 ####### RUN CHECKS ONLY ON ACTIVE DEVICE
