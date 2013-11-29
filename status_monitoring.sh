@@ -14,7 +14,12 @@ CXL_FAILOVER_MONITOR=$STORAGE_DIR\/CXL_Failover
 POL_INST=$STORAGE_DIR\/policy_install_timestamp
 DC_MONITOR=$STORAGE_DIR\/ifmap_connect_timestamp
 DATE=$(/bin/date)
+#Thresholds for Table Monitoring
+PDP_THRESH=200
+PEP_THRESH=200
+#####################   
 
+####### 
 #Create Files/Directories only if they do not already exist
 if [ ! -f "$LOGFILE" ]
 	then
@@ -33,28 +38,27 @@ if [ ! -f "$CXL_FAILOVER_MONITOR" ]
 
 if [ ! -f "$POL_INST" ]
 	then
-		fw stat | grep -v HOST |awk '{print $4}' > $POL_INST
+		fw stat | grep -v HOST |awk '{print $3,$4}' > $POL_INST
 	fi
 
 if [ ! -f "$DC_MONITOR" ]
 	then
 		pdp i s | grep 443 | awk '{print $7}' > $DC_MONITOR
 	fi
+#####################   
 
 ####### Connections table Monitoring
 CONN_TABLE_THRESHOLD=50000
 CONN_TABLE_SIZE=$(fw tab -t connections -s |grep connections |awk '{print $4}')
 CONN_TABLE_LIMIT=75000
 CONN_TABLE_LIMIT_ACTUAL=$(fw tab -t connections | head -n 3 | grep "limit" | awk -F, '{print $9}' | sed 's/\ limit //g')
-####### 
+#####################   
 
 ###### CLEAR HUNG PDP SEARCH from other scripts
 ps aux | grep "pdp i s 1" | grep -v grep | awk '{print $2}' | xargs kill -9 2>&1 &
+#####################   
 
 ####### Identity Awareness table sizes
-PDP_THRESH=200
-PEP_THRESH=200
-
 PDP_SESS=$(fw tab -t pdp_sessions -s | grep pdp | awk '{print $4}')
 PDP_IP=$(fw tab -t pdp_ip -s | grep pdp | awk '{print $4}')
 PDP_TIMER=$(fw tab -t pdp_timers -s | grep pdp | awk '{print $4}')
@@ -64,6 +68,7 @@ PDP_NET_DB=$(fw tab -t pdp_net_db -s | grep pdp | awk '{print $4}')
 PEP_NET_REG=$(fw tab -t pep_net_reg -s | grep pep | awk '{print $4}')
 PEP_CLIENT_DB=$(fw tab -t pep_client_db -s | grep pep | awk '{print $4}')
 PEP_SRC_MAP=$(fw tab -t pep_src_mapping_db -s | grep pep | awk '{print $4}')
+#####################   
 
 ####### Cluster Monitoring
 #Determine Active Member of Cluster
@@ -74,6 +79,7 @@ CPHA_STAT=$(cphaprob stat | grep -i "down\|attention")
 CPHA_CURRENT=$(cphaprob stat | grep local | awk '{print $5}')
 #View last snapshot of cluster state - monitor for state change/failover
 CPHA_LAST=$(cat $CXL_FAILOVER_MONITOR)
+#####################   
 
 ####### IFMAP Monitoring (only on primary cluster member)
 #Should equal Connected
@@ -82,8 +88,14 @@ IF_STAT=$(pdp i s | grep Connected | tail -n 1 | awk '{print $4}')
 IF_PEER=$(pdp i s | grep Connected | tail -n 1 | awk '{print $2}')
 #GET Netstat output and verify 2 active connections
 NETSTAT=$(netstat -na | grep $IF_PEER | grep "\:443" | wc -l)
+#####################   
 
-#ALERT FOR CONNECTION TABLE THRESHOLD
+####### Policy Installation Monitoring
+Policy_CURRENT=$(fw stat | grep -v HOST |awk '{print $3,$4}')
+Policy_LAST=$(cat $POL_INST)
+#####################   
+
+####### ALERT FOR CONNECTION TABLE THRESHOLD
 if [ "$CONN_TABLE_SIZE" -gt "$CONN_TABLE_THRESHOLD" ]
 	then
 		echo $DATE 
@@ -100,8 +112,9 @@ if [ "$CONN_TABLE_LIMIT_ACTUAL" -lt "$CONN_TABLE_LIMIT" ]
 		echo "Current Connection Table Limit:" 
 		echo $CONN_TABLE_LIMIT_ACTUAL 
 	fi
+#####################   
 
-#Monitoring Identity Awareness table sizes
+####### Monitoring Identity Awareness table sizes
 
 #ALERT FOR PDP THRESHOLDS - LESS THAN OR EQUAL
 if [ "$PDP_SESS" -le "$PDP_THRESH" ]
@@ -168,8 +181,9 @@ if [ "$PEP_SRC_MAP" -le "$PEP_THRESH" ]
 		echo "Current PEP_SRC_MAP:" 
 		echo $PEP_SRC_MAP 
 	fi
+#####################   
 
-#### Monitor Cluster Activity
+####### Monitor Cluster Activity
 #REPORT DOWN STATE
 if [ "$CPHA_STAT" != "" ]
 	then
@@ -180,10 +194,6 @@ if [ "$CPHA_STAT" != "" ]
 	fi
 
 #View previous state and report if changed (Failover)
-# Should print the following:
-#****Cluster state has changed! Possible Failover has occurred!****
-#Previous Cluster Member Status: Standby 
-#Current Cluster Member Status: Active
 if [ "$CPHA_CURRENT" == "$CPHA_LAST" ]
 	then
 	#Do nothing
@@ -196,13 +206,24 @@ if [ "$CPHA_CURRENT" == "$CPHA_LAST" ]
 		cphaprob stat | grep local | awk '{print $5}' > $CXL_FAILOVER_MONITOR
 	fi
 
-#View current cluster state (Active vs Standby)
-#CPHA_CURRENT=$(cphaprob stat | grep local | awk '{print $5}')
-#View last snapshot of cluster state - monitor for state change/failover
-#CPHA_LAST=$(cat $CXL_FAILOVER_MONITOR)
+#####################   
+#Policy_CURRENT=$(fw stat | grep -v HOST |awk '{print $4}')
+#Policy_LAST=$(cat $POL_INST)
+####### Monitor for Policy Installation
+if [ "$Policy_CURRENT" == "$Policy_LAST" ]
+	then
+	#Do nothing
+		:
+	else
+		echo "****Policy Installation Timestamp has changed! Policy push has occured - Please confirm that this was approved!****"
+		echo "Previous Policy Installation Timestamp Member Status: $Policy_LAST "
+		echo "Current Policy Installation Timestamp: $Policy_CURRENT"
+		rm $POL_INST
+		fw stat | grep -v HOST |awk '{print $3,$4}' > $POL_INST
+	fi
+#####################   
 
-
-# RUN CHECKS ONLY ON ACTIVE DEVICE
+####### RUN CHECKS ONLY ON ACTIVE DEVICE
 if [ "$CPHA_ACTIVE" != "" ]
 	then
 		#GET IF-MAP Connection Status
@@ -226,7 +247,8 @@ if [ "$CPHA_ACTIVE" != "" ]
 	#Do nothing
 	:
 	fi
+#####################   
 
-# Cleanup log errors
+####### Cleanup log errors
 sed -i '/ckpSSL/d;/kill/d' $LOGFILE
-
+#####################   
