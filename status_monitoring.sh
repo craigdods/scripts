@@ -3,7 +3,7 @@
 source /etc/profile.d/CP.sh
 
 #Designed to be run from CRON
-#*/5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
+# */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
 
 ####### Connections table Monitoring
 CONN_TABLE_THRESHOLD=50000
