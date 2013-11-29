@@ -3,6 +3,7 @@
 #
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
+#Sleeps added to prevent load issues on PDP
 
 #Source CP-ENV
 source /etc/profile.d/CP.sh
@@ -60,14 +61,21 @@ ps aux | grep "pdp i s 1" | grep -v grep | awk '{print $2}' | xargs kill -9 2>&1
 
 ####### Identity Awareness table sizes
 PDP_SESS=$(fw tab -t pdp_sessions -s | grep pdp | awk '{print $4}')
+sleep 0.5
 PDP_IP=$(fw tab -t pdp_ip -s | grep pdp | awk '{print $4}')
+sleep 0.5
 PDP_TIMER=$(fw tab -t pdp_timers -s | grep pdp | awk '{print $4}')
+sleep 0.5
 PDP_NET_REG=$(fw tab -t pdp_net_reg -s | grep pdp | awk '{print $4}')
+sleep 0.5
 PDP_NET_DB=$(fw tab -t pdp_net_db -s | grep pdp | awk '{print $4}')
-
+sleep 0.5
 PEP_NET_REG=$(fw tab -t pep_net_reg -s | grep pep | awk '{print $4}')
+sleep 0.5
 PEP_CLIENT_DB=$(fw tab -t pep_client_db -s | grep pep | awk '{print $4}')
+sleep 0.5
 PEP_SRC_MAP=$(fw tab -t pep_src_mapping_db -s | grep pep | awk '{print $4}')
+sleep 0.5
 #####################   
 
 ####### Cluster Monitoring
@@ -84,12 +92,16 @@ CPHA_LAST=$(cat $CXL_FAILOVER_MONITOR)
 ####### IFMAP Monitoring (only on primary cluster member)
 #Should equal Connected
 IF_STAT=$(pdp i s | grep Connected | tail -n 1 | awk '{print $4}')
+sleep 0.5
 #Print IF-MAP Manager/Controller IP
 IF_PEER=$(pdp i s | grep Connected | tail -n 1 | awk '{print $2}')
+sleep 0.5
 #GET Netstat output and verify 2 active connections
 NETSTAT=$(netstat -na | grep $IF_PEER | grep "\:443" | wc -l)
+sleep 0.5
 #IFMAP Connection State (All devices)
 IFMAP_CURRENT=$(pdp i s | grep 443 | awk '{print $5,$6,$7,$8}')
+sleep 0.5
 IFMAP_LAST=$(cat $DC_MONITOR)
 #####################   
 
