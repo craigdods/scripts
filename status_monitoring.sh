@@ -1,9 +1,45 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
-source /etc/profile.d/CP.sh
-
+#
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
+
+#Source CP-ENV
+source /etc/profile.d/CP.sh
+
+####### 
+LOGFILE=/home/admin/ALERT_LOG.txt
+STORAGE_DIR=/var/log/tmp/stat_monitoring_storage
+CXL_FAILOVER_MONITOR=$STORAGE_DIR\/CXL_Failover
+POL_INST=$STORAGE_DIR\/policy_install_timestamp
+DC_MONITOR=$STORAGE_DIR\/ifmap_connect_timestamp
+DATE=$(/bin/date)
+
+#Create Files/Directories only if they do not already exist
+if [ ! -f "$LOGFILE" ]
+	then
+		touch $LOGFILE
+	fi
+
+if [ ! -d "$STORAGE_DIR" ]
+	then
+		mkdir $STORAGE_DIR
+	fi
+
+if [ ! -f "$CXL_FAILOVER_MONITOR" ]
+	then
+		cphaprob stat | grep local | awk '{print $5}' > $CXL_FAILOVER_MONITOR
+	fi
+
+if [ ! -f "$POL_INST" ]
+	then
+		fw stat | grep -v HOST |awk '{print $4}' > $POL_INST
+	fi
+
+if [ ! -f "$DC_MONITOR" ]
+	then
+		pdp i s | grep 443 | awk '{print $7}' > $DC_MONITOR
+	fi
 
 ####### Connections table Monitoring
 CONN_TABLE_THRESHOLD=50000
@@ -30,9 +66,14 @@ PEP_CLIENT_DB=$(fw tab -t pep_client_db -s | grep pep | awk '{print $4}')
 PEP_SRC_MAP=$(fw tab -t pep_src_mapping_db -s | grep pep | awk '{print $4}')
 
 ####### Cluster Monitoring
-#Determine if Active/Standby
+#Determine Active Member of Cluster
 CPHA_ACTIVE=$(cphaprob stat | grep local | grep Active)
+#Look for problem state
 CPHA_STAT=$(cphaprob stat | grep -i "down\|attention")
+#View current cluster state (Active vs Standby)
+CPHA_CURRENT=$(cphaprob stat | grep local | awk '{print $5}')
+#View last snapshot of cluster state - monitor for state change/failover
+CPHA_LAST=$(cat $CXL_FAILOVER_MONITOR)
 
 ####### IFMAP Monitoring (only on primary cluster member)
 #Should equal Connected
@@ -41,11 +82,6 @@ IF_STAT=$(pdp i s | grep Connected | tail -n 1 | awk '{print $4}')
 IF_PEER=$(pdp i s | grep Connected | tail -n 1 | awk '{print $2}')
 #GET Netstat output and verify 2 active connections
 NETSTAT=$(netstat -na | grep $IF_PEER | grep "\:443" | wc -l)
-
-####### 
-LOGFILE='/home/admin/ALERT_LOG.txt'
-DATE=$(/bin/date)
-touch $LOGFILE
 
 #ALERT FOR CONNECTION TABLE THRESHOLD
 if [ "$CONN_TABLE_SIZE" -gt "$CONN_TABLE_THRESHOLD" ]
@@ -142,26 +178,43 @@ if [ "$CPHA_STAT" != "" ]
 		echo "Current CLUSTER STATUS:" 
 		echo $CPHA_STAT 
 	fi
+#View previous state and report if changed (Failover)
+if [ "$CPHA_CURRENT" == "$CPHA_LAST" ]
+	then
+		:
+	else
+		echo "Cluster state has changed! Possible Failover has occurred!"
+		echo "Previous Cluster Member Status: $CPHA_LAST "
+		echo "Current Cluster Member Status: $CPHA_CURRENT"
+	fi
+
+
+#View current cluster state (Active vs Standby)
+#CPHA_CURRENT=$(cphaprob stat | grep local | awk '{print $5}')
+#View last snapshot of cluster state - monitor for state change/failover
+#CPHA_LAST=$(cat $CXL_FAILOVER_MONITOR)
+
 
 # RUN CHECKS ONLY ON ACTIVE DEVICE
 if [ "$CPHA_ACTIVE" != "" ]
 	then
-	#GET IF-MAP Connection Status
-	if [ "$IF_STAT" != "Connected" ]
-	then
-		echo $DATE 
-		echo "****IF-MAP CONNECTION DOWN*****" 
-		echo "Current IF-MAP STATUS:" 
-		echo $IF_STAT 
-	fi
-	#CHECK Netstat for 2 active SSL connections back to Controller/MGR
-	if [ "$NETSTAT" -ne 2 ]
-	then
-		echo $DATE 
-		echo "****IF-MAP CONNECTION ISSUE REPORTED VIA NETSTAT*****" 
-		echo "Current connections over 443 to $IF_PEER:" 
-		echo $NETSTAT 
-	fi
+		#GET IF-MAP Connection Status
+		if [ "$IF_STAT" != "Connected" ]
+		then
+			echo $DATE 
+			echo "****IF-MAP CONNECTION DOWN*****" 
+			echo "Current IF-MAP STATUS:" 
+			echo $IF_STAT 
+		fi
+		
+		#CHECK Netstat for 2 active SSL connections back to Controller/MGR
+		if [ "$NETSTAT" -ne 2 ]
+		then
+			echo $DATE 
+			echo "****IF-MAP CONNECTION ISSUE REPORTED VIA NETSTAT*****" 
+			echo "Current connections over 443 to $IF_PEER:" 
+			echo $NETSTAT 
+		fi
 	else
 	#Do nothing
 	:
