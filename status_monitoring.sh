@@ -1,6 +1,6 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
-#version-1.3
+#version-1.4
 #
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
@@ -34,24 +34,24 @@ if [ ! -d "$STORAGE_DIR" ]
 		mkdir $STORAGE_DIR
 	fi
 
-if [ ! -f "$CXL_FAILOVER_MONITOR" ]
+if [ ! -s "$CXL_FAILOVER_MONITOR" ]
 	then
 		cphaprob stat | grep local | awk '{print $5}' > $CXL_FAILOVER_MONITOR
 	fi
 
-if [ ! -f "$POL_INST" ]
+if [ ! -s "$POL_INST" ]
 	then
 		fw stat | grep -v HOST |awk '{print $3,$4}' > $POL_INST
 	fi
 
-if [ ! -f "$DC_MONITOR" ]
+if [ ! -s "$DC_MONITOR" ]
 	then
 	#Sleep 2 to let PDP recover from polling (sigh)
 	sleep 2
 		pdp i s | grep 443 | awk '{print $5,$6,$7,$8}' > $DC_MONITOR
 	fi
 
-if [ ! -f "$IF_PEER_MONITOR" ]
+if [ ! -s "$IF_PEER_MONITOR" ]
 	then
 	#Sleep 2 to let PDP recover from polling (sigh)
 	sleep 2
