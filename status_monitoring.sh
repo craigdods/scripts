@@ -1,6 +1,6 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
-#version-1.41
+#version-1.42
 #
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
@@ -127,19 +127,23 @@ Policy_LAST=$(cat $POL_INST)
 ####### ALERT FOR CONNECTION TABLE THRESHOLD
 if [ "$CONN_TABLE_SIZE" -gt "$CONN_TABLE_THRESHOLD" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****CONNECTION Table Threshold of $CONN_TABLE_THRESHOLD Exceeded!*****" 
 		echo "Current Connection Size:" 
 		echo $CONN_TABLE_SIZE 
+		echo ""
 	fi
 
 #ALERT FOR CONNECTION TABLE SIZE MODIFICATIONS
 if [ "$CONN_TABLE_LIMIT_ACTUAL" -lt "$CONN_TABLE_LIMIT" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****CONNECTION Table Limit HAS DECREASED from $CONN_TABLE_LIMIT!*****" 
 		echo "Current Connection Table Limit:" 
 		echo $CONN_TABLE_LIMIT_ACTUAL 
+		echo ""
 	fi
 #####################   
 
@@ -148,26 +152,32 @@ if [ "$CONN_TABLE_LIMIT_ACTUAL" -lt "$CONN_TABLE_LIMIT" ]
 #ALERT FOR PDP THRESHOLDS - LESS THAN OR EQUAL
 if [ "$PDP_SESS" -le "$PDP_THRESH" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****PDP_SESSIONS TOO LOW*****" 
 		echo "Current PDP Sessions:" 
 		echo $PDP_SESS 
+		echo ""
 	fi
 
 if [ "$PDP_IP" -le "$PDP_THRESH" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****PDP_IP TOO LOW*****" 
 		echo "Current PDP IP value:" 
 		echo $PDP_IP 
+		echo ""
 	fi
 
 if [ "$PDP_TIMER" -le "$PDP_THRESH" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****PDP_TIMERS TOO LOW*****" 
 		echo "Current PDP Timers:" 
 		echo $PDP_TIMER 
+		echo ""
 	fi
 
 if [ "$PDP_NET_REG" -le "$PDP_THRESH" ]
@@ -181,34 +191,42 @@ if [ "$PDP_NET_REG" -le "$PDP_THRESH" ]
 #Custom value for PDP_NET_DB
 if [ "$PDP_NET_DB" -le 5 ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****PDP_NET_DB TOO LOW*****" 
 		echo "Current PDP_NET_DB:" 
 		echo $PDP_NET_DB 
+		echo ""
 	fi
 
 if [ "$PEP_NET_REG" -le "$PEP_THRESH" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****PEP_NET_REG TOO LOW*****" 
 		echo "Current PEP_NET_REG:" 
 		echo $PEP_NET_REG 
+		echo ""
 	fi
 
 if [ "$PEP_CLIENT_DB" -le "$PEP_THRESH" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****PEP_CLIENT_DB TOO LOW*****" 
 		echo "Current PEP_CLIENT_DB:" 
 		echo $PEP_CLIENT_DB 
+		echo ""
 	fi
 
 if [ "$PEP_SRC_MAP" -le "$PEP_THRESH" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****PEP_SRC_MAPPING_DB TOO LOW*****" 
 		echo "Current PEP_SRC_MAP:" 
 		echo $PEP_SRC_MAP 
+		echo ""
 	fi
 #####################   
 
@@ -216,10 +234,12 @@ if [ "$PEP_SRC_MAP" -le "$PEP_THRESH" ]
 #REPORT DOWN STATE
 if [ "$CPHA_STAT" != "" ]
 	then
+		echo ""
 		echo $DATE 
 		echo "****CLUSTER STATUS DOWN*****" 
 		echo "Current CLUSTER STATUS:" 
 		echo $CPHA_STAT 
+		echo ""
 	fi
 
 #View previous state and report if changed (Failover)
@@ -228,9 +248,11 @@ if [ "$CPHA_CURRENT" == "$CPHA_LAST" ]
 	#Do nothing
 		:
 	else
+		echo ""
 		echo "****Cluster state has changed! Possible Failover has occurred!****"
 		echo "Previous Cluster Member Status: $CPHA_LAST "
 		echo "Current Cluster Member Status: $CPHA_CURRENT"
+		echo ""
 		rm $CXL_FAILOVER_MONITOR
 		cphaprob stat | grep local | awk '{print $5}' > $CXL_FAILOVER_MONITOR
 	fi
@@ -243,9 +265,11 @@ if [ "$Policy_CURRENT" == "$Policy_LAST" ]
 	#Do nothing
 		:
 	else
+		echo ""
 		echo "****Policy Installation Timestamp has changed! Policy push has occured - Please confirm that this was approved!****"
 		echo "Previous Policy Installation Timestamp Member Status: $Policy_LAST "
 		echo "Current Policy Installation Timestamp: $Policy_CURRENT"
+		echo ""
 		rm $POL_INST
 		fw stat | grep -v HOST |awk '{print $3,$4}' > $POL_INST
 	fi
@@ -259,9 +283,11 @@ if [ "$IFMAP_CURRENT" == "$IFMAP_LAST" ]
 	#Do nothing
 		:
 	else
+		echo ""
 		echo "********Possible IF-MAP Disconnect!********"
 		echo "Previous IF-MAP Connection Timestamp (Likely to be NULL if previously Standby): $IFMAP_LAST "
 		echo "Current IF-MAP Connection Timestamp: $IFMAP_CURRENT"
+		echo ""
 		rm $DC_MONITOR
 		pdp i s | grep 443 | awk '{print $5,$6,$7,$8}' > $DC_MONITOR
 	fi
@@ -274,19 +300,23 @@ if [ "$CPHA_ACTIVE" != "" ]
 		#GET IF-MAP Connection Status
 		if [ "$IF_STAT" != "Connected" ]
 		then
+			echo ""
 			echo $DATE 
 			echo "****IF-MAP CONNECTION DOWN*****" 
 			echo "Current IF-MAP STATUS:" 
 			echo $IF_STAT 
+			echo ""
 		fi
 		
 		#CHECK Netstat for 2 active SSL connections back to Controller/MGR
 		if [ "$NETSTAT" -ne 2 ]
 		then
+			echo ""
 			echo $DATE 
 			echo "****IF-MAP CONNECTION ISSUE REPORTED VIA NETSTAT*****" 
 			echo "Current connections over 443 to $IF_PEER:" 
 			echo $NETSTAT 
+			echo ""
 		fi
 	else
 	#Do nothing
