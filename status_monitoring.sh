@@ -1,6 +1,6 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
-#version-1.4
+#version-1.41
 #
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
@@ -55,7 +55,7 @@ if [ ! -s "$IF_PEER_MONITOR" ]
 	then
 	#Sleep 2 to let PDP recover from polling (sigh)
 	sleep 2
-		pdp i s | grep Connected | tail -n 1 | awk '{print $2}' > $IF_PEER_MONITOR
+		pdp i s | grep Connected | grep -v Status | awk '{print $2}' > $IF_PEER_MONITOR
 	fi
 
 #####################   
