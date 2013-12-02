@@ -1,6 +1,6 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
-#version-1.42
+#version-1.43
 #
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
@@ -325,5 +325,5 @@ if [ "$CPHA_ACTIVE" != "" ]
 #####################   
 
 ####### Cleanup log errors
-sed -i '/ckpSSL/d;/kill/d' $LOGFILE
+sed -i '/ckpSSL/d;/kill/d;/grep/d' $LOGFILE
 #####################   
