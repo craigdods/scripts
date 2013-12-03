@@ -1,6 +1,6 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
-#version-1.43
+#version-1.44
 #
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
@@ -8,6 +8,10 @@
 
 #Source CP-ENV
 source /etc/profile.d/CP.sh
+
+###### CLEAR HUNG PDP SEARCH from other scripts
+ps aux | grep "pdp i s 1" | grep -v grep | awk '{print $2}' | xargs kill -9 2>&1 &
+#####################   
 
 ####### 
 LOGFILE=/home/admin/ALERT_LOG.txt
@@ -18,8 +22,8 @@ DC_MONITOR=$STORAGE_DIR\/ifmap_connect_timestamp
 IF_PEER_MONITOR=$STORAGE_DIR\/ifmap_peer_ip
 DATE=$(/bin/date)
 #Thresholds for Table Monitoring
-PDP_THRESH=200
-PEP_THRESH=200
+PDP_THRESH=10
+PEP_THRESH=10
 #####################   
 
 ####### 
@@ -65,10 +69,6 @@ CONN_TABLE_THRESHOLD=50000
 CONN_TABLE_SIZE=$(fw tab -t connections -s |grep connections |awk '{print $4}')
 CONN_TABLE_LIMIT=75000
 CONN_TABLE_LIMIT_ACTUAL=$(fw tab -t connections | head -n 3 | grep "limit" | awk -F, '{print $9}' | sed 's/\ limit //g')
-#####################   
-
-###### CLEAR HUNG PDP SEARCH from other scripts
-ps aux | grep "pdp i s 1" | grep -v grep | awk '{print $2}' | xargs kill -9 2>&1 &
 #####################   
 
 ####### Identity Awareness table sizes
