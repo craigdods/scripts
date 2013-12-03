@@ -22,8 +22,8 @@ DC_MONITOR=$STORAGE_DIR\/ifmap_connect_timestamp
 IF_PEER_MONITOR=$STORAGE_DIR\/ifmap_peer_ip
 DATE=$(/bin/date)
 #Thresholds for Table Monitoring
-PDP_THRESH=10
-PEP_THRESH=10
+PDP_THRESH=200
+PEP_THRESH=200
 #####################   
 
 ####### 
