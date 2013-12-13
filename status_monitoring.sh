@@ -1,6 +1,6 @@
 #!/bin/bash
 #Written by Craig Dods 25/11/2013
-#version-1.44
+#version-1.45
 #
 #Designed to be run from CRON
 # */5 * * * * /bin/bash /home/admin/scripts/status_monitoring.sh >> /home/admin/ALERT_LOG.txt 2>&1
@@ -66,7 +66,7 @@ if [ ! -s "$IF_PEER_MONITOR" ]
 
 ####### Connections table Monitoring
 CONN_TABLE_THRESHOLD=50000
-CONN_TABLE_SIZE=$(fw tab -t connections -s |grep connections |awk '{print $4}')
+CONN_TABLE_SIZE=$(fw ctl pstat | grep "peak concurrent" | sed 's/^[ \t]*//;s/\ peak concurrent//g')
 CONN_TABLE_LIMIT=75000
 CONN_TABLE_LIMIT_ACTUAL=$(fw tab -t connections | head -n 3 | grep "limit" | awk -F, '{print $9}' | sed 's/\ limit //g')
 #####################   
@@ -130,7 +130,7 @@ if [ "$CONN_TABLE_SIZE" -gt "$CONN_TABLE_THRESHOLD" ]
 		echo ""
 		echo $DATE 
 		echo "****CONNECTION Table Threshold of $CONN_TABLE_THRESHOLD Exceeded!*****" 
-		echo "Current Connection Size:" 
+		echo "Current Connection Table Peak:" 
 		echo $CONN_TABLE_SIZE 
 		echo ""
 	fi
