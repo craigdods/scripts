@@ -1,4 +1,5 @@
 #!/bin/sh
+# Written by Craig Dods
 # Manual configuration file required in /opt/devmgmt/etc/cp.cma.hapairs
 # Configuration should be listed in two columns. Column A should be the primary CMA that resides on the current container. Column B should be the secondary CMA that resides elsewhere.
 
