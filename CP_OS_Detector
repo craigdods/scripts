@@ -1,0 +1,17 @@
+if (-f /image/current/kernel) then
+	set ipso = 1
+else
+	set ipso = 0
+endif
+
+if (-f /proc/kmsg) then
+	set linux = 1
+else
+	set linux = 0
+endif
+
+if (-f /etc/appliance_config.xml) then
+	set gaia = 1
+else
+	set gaia = 0
+endif     
