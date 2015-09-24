@@ -1,1 +1,3 @@
 grep -v "Kernel\|Destination" cp_routes.txt | awk '{ if ($2 != "0.0.0.0" ) { print $0; } }' | sed '/^\s*$/d'
+
+awk '{ if ($3 == "255.255.255.0" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/24 next-hop",$2}}' Route_Table_Temp
