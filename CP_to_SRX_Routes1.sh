@@ -5,6 +5,7 @@ echo ""
 
 RTABLE=/var/tmp/RTABLE.txt
 touch $RTABLE
+FINAL=/var/tmp/Final_SRX_Configuration.jos
 #Gathers table, deletes local + loopback routes
 netstat -nr | grep -v "Kernel\|Destination" | awk '{ if ($2 != "0.0.0.0" ) { print $0; } }' | sed '/^\s*$/d' > $RTABLE
 
@@ -41,3 +42,7 @@ awk '{ if ($3 == "255.255.255.248" ) {print "set routing-instances TRAFFIC routi
 awk '{ if ($3 == "255.255.255.252" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/30 next-hop",$2}}' $RTABLE >> $FINAL
 awk '{ if ($3 == "255.255.255.254" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/31 next-hop",$2}}' $RTABLE >> $FINAL
 awk '{ if ($3 == "255.255.255.255" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/32 next-hop",$2}}' $RTABLE >> $FINAL
+
+echo "Please find your file at $FINAL"
+rm $RTABLE
+echo "Goodbye..."
