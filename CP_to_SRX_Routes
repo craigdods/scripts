@@ -1,0 +1,1 @@
+grep -v "Kernel\|Destination" cp_routes.txt | awk '{ if ($2 != "0.0.0.0" ) { print $0; } }' | sed '/^\s*$/d'
