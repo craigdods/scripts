@@ -1,4 +1,11 @@
-grep -v "Kernel\|Destination" cp_routes.txt | awk '{ if ($2 != "0.0.0.0" ) { print $0; } }' | sed '/^\s*$/d'
+#!/bin/bash
+
+echo "Hello, we are now collecting the current routing information and generating SRX set commands"
+echo ""
+
+RTABLE=/var/tmp/RTABLE.txt
+#Gathers table, deletes local routes
+netstat -nr | grep -v "Kernel\|Destination" | awk '{ if ($2 != "0.0.0.0" ) { print $0; } }' | sed '/^\s*$/d' > $RTABLE
 
 awk '{ if ($3 == "128.0.0.0" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/1 next-hop",$2}}' Route_Table_Temp
 awk '{ if ($3 == "192.0.0.0" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/2 next-hop",$2}}' Route_Table_Temp
