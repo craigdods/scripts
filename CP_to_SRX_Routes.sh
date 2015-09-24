@@ -2,7 +2,7 @@
 # Written by Craig Dods
 # Last Edit on 09/24/2015
 # This will attempt to convert Check Point (generic linux really...) routes into SRX-style set commands
-# This is hardcoded to use the 'TRAFFIC' routing-instance as per default reference architecture. Modify at your own risk.
+# This is hardcoded to use the 'TRAFFIC' routing-instance as per MSS reference architecture. Modify at your own risk.
 
 echo "Hello, we are now collecting the current routing information and generating SRX set commands"
 echo ""
