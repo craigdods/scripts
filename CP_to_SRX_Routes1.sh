@@ -7,6 +7,7 @@ RTABLE=/var/tmp/RTABLE.txt
 #Gathers table, deletes local routes
 netstat -nr | grep -v "Kernel\|Destination" | awk '{ if ($2 != "0.0.0.0" ) { print $0; } }' | sed '/^\s*$/d' > $RTABLE
 
+awk '{ if ($3 == "0.0.0.0" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/0 next-hop",$2}}' $RTABLE
 awk '{ if ($3 == "128.0.0.0" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/1 next-hop",$2}}' $RTABLE
 awk '{ if ($3 == "192.0.0.0" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/2 next-hop",$2}}' $RTABLE
 awk '{ if ($3 == "224.0.0.0" ) {print "set routing-instances TRAFFIC routing-options static route",$1"/3 next-hop",$2}}' $RTABLE
