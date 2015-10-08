@@ -26,6 +26,9 @@ touch $TMP_NET
 NETWORKS_OUT=final_network_config.jos
 touch $NETWORKS_OUT
 
+BADAPPS=applications_to_manually_create.txt
+APPS_OUT=final_application_config.jos
+
 
 #Creates Host Nodes (/32)
 grep "Host Node" $ORIG_FILE -A 1 -B 1 | awk -F[\>] '{print $3}' | sed 's/\<br//g;s/<\/a//g;s/<//g;/^\s*$/d' | awk '{printf "%s"(NR%2?" ":RS),$0}' | awk '{print "set security address-book global address",$1,$2}' > $HOSTS_OUT
@@ -66,3 +69,10 @@ awk '{ if ($3 == "255.255.255.248" ) {print "set security address-book global ad
 awk '{ if ($3 == "255.255.255.252" ) {print "set security address-book global address",$1,$2"/30" }}' $TMP_NET >> $NETWORKS_OUT
 awk '{ if ($3 == "255.255.255.254" ) {print "set security address-book global address",$1,$2"/31" }}' $TMP_NET >> $NETWORKS_OUT
 awk '{ if ($3 == "255.255.255.255" ) {print "set security address-book global address",$1,$2"/32" }}' $TMP_NET >> $NETWORKS_OUT
+
+#Handling applications/services
+# Identifying applications we are unable to handle due to poor information in Web Export
+grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -i "dcerpc\|icmp\|group\|rpc" > $BADAPPS
+
+# Create applications that we do support
+grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -iv "dcerpc\|icmp\|group\|Rpc" | tr '[:upper:]' '[:lower:]' | awk '{print "set applications application",$1,"protocol",$2,"destination-port",$3}' > $APPS_OUT
