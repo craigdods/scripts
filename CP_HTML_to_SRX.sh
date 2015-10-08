@@ -75,4 +75,8 @@ awk '{ if ($3 == "255.255.255.255" ) {print "set security address-book global ad
 grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -i "dcerpc\|icmp\|group\|rpc\|other\|tcp_subservice\|multicast\|gtp\|tcp_citrix" > $BADAPPS
 
 # Create applications that we do support
-grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -iv "dcerpc\|icmp\|group\|rpc\|other\|tcp_subservice\|multicast\|gtp\|tcp_citrix" | tr '[:upper:]' '[:lower:]' | awk '{print "set applications application",$1,"protocol",$2,"destination-port",$3}' > $APPS_OUT
+grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -iv "tcp-highports\|udp-high-ports\|dcerpc\|icmp\|group\|rpc\|other\|tcp_subservice\|multicast\|gtp\|tcp_citrix" | tr '[:upper:]' '[:lower:]' | awk '{print "set applications application",$1,"protocol",$2,"destination-port",$3}' > $APPS_OUT
+
+# Create commonly used "custom" services such as high-ports
+echo "set applications application tcp-high-ports protocol tcp destination-port 1024-65535" >> $APPS_OUT
+echo "set applications application udp-high-ports protocol udp destination-port 1024-65535" >> $APPS_OUT
