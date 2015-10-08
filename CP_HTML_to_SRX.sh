@@ -72,7 +72,7 @@ awk '{ if ($3 == "255.255.255.255" ) {print "set security address-book global ad
 
 #Handling applications/services
 # Identifying applications we are unable to handle due to poor information in Web Export
-grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -i "dcerpc\|icmp\|group\|rpc" > $BADAPPS
+grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -i "dcerpc\|icmp\|group\|rpc\|other\|tcp_subservice\|multicast\|gtp\|tcp_citrix" > $BADAPPS
 
 # Create applications that we do support
-grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -iv "dcerpc\|icmp\|group\|Rpc" | tr '[:upper:]' '[:lower:]' | awk '{print "set applications application",$1,"protocol",$2,"destination-port",$3}' > $APPS_OUT
+grep "service_" $ORIG_FILE -A 1 -B 1  | grep -v "a href\|div class\|\/div\|--\|\<br\>\|data_row" | grep -i "vAlign\|tcp\|udp" | sed 's/<td vAlign="top"><a name=//g;s/\/a//g;' | awk -F [\>] '{print $2,$5,$7}' | sed 's/<//g;s/\/td//g' | grep -iv "dcerpc\|icmp\|group\|rpc\|other\|tcp_subservice\|multicast\|gtp\|tcp_citrix" | tr '[:upper:]' '[:lower:]' | awk '{print "set applications application",$1,"protocol",$2,"destination-port",$3}' > $APPS_OUT
