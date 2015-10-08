@@ -30,4 +30,39 @@ touch $NETWORKS_OUT
 #Creates Host Nodes (/32)
 grep "Host Node" $ORIG_FILE -A 1 -B 1 | awk -F[\>] '{print $3}' | sed 's/\<br//g;s/<\/a//g;s/<//g;/^\s*$/d' | awk '{printf "%s"(NR%2?" ":RS),$0}' | awk '{print "set security address-book global address",$1,$2}' > $HOSTS_OUT
 #Creates networks and place in temp file for further parsing
-grep -v $EXCLUDE  $ORIG_FILE |grep "Network"  -A 2 -B 1 | sed '/a\ href/d;/div/d;'| awk -F[\>] '{print $3}' | sed 's/\<br//g;s/<\/a//g;s/<//g;/^\s*$/d;s/\/td//g;/^$/d;/^M/d' | awk '{printf "%s"(NR%3?" ":RS),$0}' | grep -v "${BADCP}" | sed '/^M/d' > $TMP_NET
+grep -v $EXCLUDE  $ORIG_FILE |grep "Network"  -A 2 -B 1 | sed '/a\ href/d;/div/d;'| awk -F[\>] '{print $3}' | sed 's/\<br//g;s/<\/a//g;s/<//g;/^\s*$/d;s/\/td//g;/^$/d' | awk '{printf "%s"(NR%3?" ":RS),$0}' | grep -v "${BADCP}" | sed 's/^M//g' > $TMP_NET
+
+# Modify dotted quad addressing (x.x.x.x) to CIDR notation for Juniper
+awk '{ if ($3 == "0.0.0.0" ) {print "set security address-book global address",$1,$2"/0" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "128.0.0.0" ) {print "set security address-book global address",$1,$2"/1" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "192.0.0.0" ) {print "set security address-book global address",$1,$2"/2" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "224.0.0.0" ) {print "set security address-book global address",$1,$2"/3" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "240.0.0.0" ) {print "set security address-book global address",$1,$2"/4" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "248.0.0.0" ) {print "set security address-book global address",$1,$2"/5" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "252.0.0.0" ) {print "set security address-book global address",$1,$2"/6" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "254.0.0.0" ) {print "set security address-book global address",$1,$2"/7" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.0.0.0" ) {print "set security address-book global address",$1,$2"/8" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.128.0.0" ) {print "set security address-book global address",$1,$2"/9" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.192.0.0" ) {print "set security address-book global address",$1,$2"/10" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.224.0.0" ) {print "set security address-book global address",$1,$2"/11" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.240.0.0" ) {print "set security address-book global address",$1,$2"/12" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.248.0.0" ) {print "set security address-book global address",$1,$2"/13" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.252.0.0" ) {print "set security address-book global address",$1,$2"/14" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.254.0.0" ) {print "set security address-book global address",$1,$2"/15" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.0.0" ) {print "set security address-book global address",$1,$2"/16" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.128.0" ) {print "set security address-book global address",$1,$2"/17" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.192.0" ) {print "set security address-book global address",$1,$2"/18" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.224.0" ) {print "set security address-book global address",$1,$2"/19" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.240.0" ) {print "set security address-book global address",$1,$2"/20" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.248.0" ) {print "set security address-book global address",$1,$2"/21" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.252.0" ) {print "set security address-book global address",$1,$2"/22" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.254.0" ) {print "set security address-book global address",$1,$2"/23" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.0" ) {print "set security address-book global address",$1,$2"/24" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.128" ) {print "set security address-book global address",$1,$2"/25" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.192" ) {print "set security address-book global address",$1,$2"/26" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.224" ) {print "set security address-book global address",$1,$2"/27" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.240" ) {print "set security address-book global address",$1,$2"/28" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.248" ) {print "set security address-book global address",$1,$2"/29" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.252" ) {print "set security address-book global address",$1,$2"/30" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.254" ) {print "set security address-book global address",$1,$2"/31" }}' $TMP_NET >> $NETWORKS_OUT
+awk '{ if ($3 == "255.255.255.255" ) {print "set security address-book global address",$1,$2"/32" }}' $TMP_NET >> $NETWORKS_OUT
