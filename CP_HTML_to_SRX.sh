@@ -8,7 +8,7 @@
 ### EXCLUDE='GroupANetwork\|GroupBNetworks\|GroupCNetwork\|GroupDNetworks'
 ###
 
-EXCLUDE='US-587-Volcano-PGN-Networks\|Network-Telecom-scanners-LocalCMA\|Philips-Global-Networks-LocalCMA\|Philips-Global-Networks-Teletrol\|US-587-Volcano-Legacy-Networks\|US-587-Volcano-Networks\|LDAP-emi-USDANRMMD1'
+EXCLUDE=''
 
 ###
 ### Removing Bad defaults from CP
