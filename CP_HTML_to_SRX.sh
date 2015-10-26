@@ -1,4 +1,6 @@
 #!/bin/bash
+# Written by Craig Dods
+# Last update  Oct 26, 2015
 
 ### Static Configuration Statement
 ### Due to the limitations (inconsistencies, really) of CP Web Exports, there is not a reliable way to parse out Networks other than via grep. 
